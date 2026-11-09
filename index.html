@@ -425,6 +425,24 @@
   .source-quotes .quote-row .qt { font-size: 14px; }
   .source-quotes .qt b { font-family: ui-monospace, Menlo, Consolas, monospace; color: var(--accent2); font-weight: 700; }
   @media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; } }
+
+  /* FLOW DIAGRAM */
+  .flow-diagram { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 28px; }
+  .flow-node {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 20px; font-size: 16px; font-weight: 700; color: var(--text);
+  }
+  .flow-node.accent { border-color: var(--accent); color: var(--accent); background: #EAF0F8; }
+  .flow-node.accent2 { border-color: var(--accent2); color: var(--accent2); background: #FBF1E0; }
+  .flow-arrow { font-size: 20px; color: var(--muted); }
+
+  /* MEDIA TWO-COL (video + QR) */
+  .media-col { display: grid; grid-template-columns: 1.3fr 1fr; gap: 36px; margin-top: 8px; align-items: center; }
+  .media-col video { width: 100%; border-radius: 12px; border: 1px solid var(--border); background: #000; }
+  .media-col .qr-panel { text-align: center; }
+  .media-col .qr-panel h3 { font-family: var(--serif); font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+  .media-col .qr-panel img { width: 180px; height: 180px; border-radius: 10px; border: 1px solid var(--border); }
+  @media (max-width: 760px) { .media-col { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -455,7 +473,6 @@
 
 <div class="slide">
   <div class="slide-header">
-    <span class="section-num">03</span>
     <h2 class="section-title">零點擊的時代，<span>攤開中央社數據</span></h2>
   </div>
   <div class="slide-body">
@@ -483,7 +500,6 @@
 
 <div class="slide">
   <div class="slide-header">
-    <span class="section-num">03</span>
     <h2 class="section-title">主機熱熱鬧鬧，<span>封不封都煩惱</span></h2>
   </div>
   <div class="slide-body">
@@ -516,7 +532,7 @@
 </div>
 
 <div class="slide">
-  <div class="slide-header"><span class="section-num">04</span><h2 class="section-title">傳播的中介，<span>正在改變</span></h2></div>
+  <div class="slide-header"><h2 class="section-title">傳播的中介，<span>正在改變</span></h2></div>
   <div class="slide-body">
     <p class="lede">媒體原本同時組織新聞與閱讀；現在，<strong>AI 開始介入資訊選擇、重組與最後呈現</strong>。</p>
     <div class="comm-frame">
@@ -534,20 +550,35 @@
 </div>
 </div>
 
-<!-- SLIDE: LLM語料訓練（待補） -->
+<!-- SLIDE: LLM語料訓練 -->
 <div class="slide">
   <div class="slide-header">
-    <span class="section-num">05</span>
-    <h2 class="section-title">LLM <span>語料訓練</span></h2>
+    <h2 class="section-title">中央社，來支持<span>台灣主權LLM好不好</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">（內容待補）</p>
+    <p class="lede">AI 技術演進快速，從生成內容到自主行動，每一層都需要可信、可追溯的在地語料與資料基礎設施。</p>
+    <div class="flow-diagram">
+      <div class="flow-node">MidJourney</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node accent2">主權 LLM</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">NanoBanana</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">WorkFlow / Agentic Skills</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node accent">RAG</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node accent">MCP</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">龍蝦</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node">GrokBot</div>
+    </div>
   </div>
 </div>
 
 <div class="slide">
   <div class="slide-header">
-    <span class="section-num">06</span>
     <h2 class="section-title">中央社<span>有什麼</span></h2>
   </div>
   <div class="slide-body">
@@ -699,14 +730,19 @@
   </div>
 </div>
 
-<!-- SLIDE: 來看看可以找到什麼（待補） -->
+<!-- SLIDE: 來看看可以找到什麼 -->
 <div class="slide">
   <div class="slide-header">
-    <span class="section-num"></span>
-    <h2 class="section-title">來看看<span>可以找到什麼</span></h2>
+    <h2 class="section-title">來看看<span>可以找到什麼？</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">（內容待補）</p>
+    <div class="media-col">
+      <video src="gai-gathering-short.mp4" controls playsinline></video>
+      <div class="qr-panel">
+        <h3>認識 CNA MCP</h3>
+        <a href="https://ask.cna.com.tw/ask/"><img src="https://img-hosting.u0401006.workers.dev/i/IoCQVoW.png" alt="CNA MCP 訂閱 QR Code"></a>
+      </div>
+    </div>
   </div>
 </div>
 
