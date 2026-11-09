@@ -679,46 +679,59 @@
 
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">亞洲U18男排錦標賽：<span>檢索到無關的社群討論</span></h2>
+    <span class="section-num">04｜搜尋品質</span>
+    <h2 class="section-title">工具越多，<span>模型越容易選錯</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">加入法規工具後，同一批 500 題評測的正確率不升反降。</p>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num" style="text-decoration:line-through;color:var(--muted)">81.0%</div>
+        <div class="stat-sub">加入法規工具前</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">77.6%</div>
+        <div class="stat-sub">加入法規工具後</div>
+      </div>
+    </div>
+    <div class="eco-grid" style="margin-top:22px">
+      <div class="eco-card">
+        <div class="eco-type">掉分原因</div>
+        <div class="eco-name">掉分的題目，多半是選錯工具</div>
+        <ul style="padding-left:20px;margin-top:8px;font-size:14.5px;color:var(--muted);line-height:1.7">
+          <li>35 題第一步就查法規庫，其中 30 題沒再回頭查新聞</li>
+          <li>27 題只查了政府公告、企業新聞稿的工具</li>
+          <li>問「哪天三讀」「何時上路」，被「法規」兩字吸走</li>
+        </ul>
+      </div>
+    </div>
+    <div class="insight-blue" style="margin-top:18px">Twinkle AI 這類開放資料 hub，每支工具分工明確；中央社新聞什麼主題都有，<strong>路由很難切乾淨</strong>。</div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">05｜AI 平台審核與行為不一</span>
+    <h2 class="section-title">想當首選？<span>送審規範明文禁止</span></h2>
   </div>
   <div class="slide-body">
     <div class="case-grid">
-      <div>
-        <div class="label-row">題目</div>
-        <div class="case-q">在中國舉行的 2026 年亞洲 U18 男子排球錦標賽中，台灣隊從分組預賽首戰到 4 強戰（不含季軍戰）共打了 5 場比賽，這 5 場合計輸掉幾局？</div>
-        <div class="case-answer"><strong>正解：8 局</strong></div>
-        <div class="step-list">
-          <div class="step-item">
-            <div class="step-num">1</div>
-            <div><div class="step-title">搜尋 2 次</div><div class="step-desc">中英文各一次，關鍵字含亞洲U18男子排球、台灣、4強</div></div>
-          </div>
-          <div class="step-item">
-            <div class="step-num">2</div>
-            <div><div class="step-title">檢索 34 個來源</div><div class="step-desc">其中 reddit 7 個、維基百科 6 個、中央社 4 個</div></div>
-          </div>
-          <div class="step-item">
-            <div class="step-num">3</div>
-            <div><div class="step-title">回答「8 局」<span class="pill-correct">正確</span></div><div class="step-desc">最終引用：中央社 1 篇（只涵蓋部分答案）</div></div>
-          </div>
-        </div>
+      <div class="eco-card g" style="background:var(--accent);color:#fff">
+        <div class="eco-type" style="color:var(--accent2)">原本的理想</div>
+        <div class="eco-name" style="color:#fff">裝了中央社 MCP，模型查新聞時就優先用我們，補強 web search。</div>
+        <div style="font-size:14.5px;color:#C7D2E0;margin-top:10px;line-height:1.6">工具說明曾寫：「新聞搜尋的預設工具」「優先於 web search」「任一符合即應呼叫」</div>
       </div>
       <div class="source-panel">
-        <div class="label-row">檢索來源（共 34 個）</div>
-        <div class="source-bar-row gold"><span class="source-bar-label">reddit</span><div class="source-bar-track"><div class="source-bar-fill" style="width:63.6%"></div></div><span class="source-bar-value">7</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">維基百科</span><div class="source-bar-track"><div class="source-bar-fill" style="width:54.5%"></div></div><span class="source-bar-value">6</span></div>
-        <div class="source-bar-row blue"><span class="source-bar-label">中央社</span><div class="source-bar-track"><div class="source-bar-fill" style="width:36.4%"></div></div><span class="source-bar-value">4</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">自由時報</span><div class="source-bar-track"><div class="source-bar-fill" style="width:36.4%"></div></div><span class="source-bar-value">4</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">YouTube</span><div class="source-bar-track"><div class="source-bar-fill" style="width:18.2%"></div></div><span class="source-bar-value">2</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">其他</span><div class="source-bar-track"><div class="source-bar-fill" style="width:100%"></div></div><span class="source-bar-value">11</span></div>
-        <div class="label-row" style="margin-top:18px">檢索到的 reddit 貼文（節錄）</div>
-        <div class="source-quotes quote-rows">
-          <div class="quote-row"><span class="qt"><b>r/LOOK_CHINA</b>　昨天亞運棒球臺灣3:7不敵日本，今天將要跟中國爭銅牌（棒球，非排球）</span></div>
-          <div class="quote-row"><span class="qt"><b>r/PakSports</b>　Reigning Asian U16 champions Pakistan placed in……（巴基斯坦U16排球）</span></div>
-          <div class="quote-row"><span class="qt"><b>r/PBA</b>　菲律賓職籃討論版貼文</span></div>
-        </div>
+        <div class="label-row">OpenAI 規範明文禁止</div>
+        <ul style="padding-left:20px;margin-top:8px;font-size:14.5px;color:var(--muted);line-height:1.7">
+          <li>任何模型讀得到的欄位，都不得引導模型偏好自家、貶低他家</li>
+          <li>不得指示模型去呼叫別的工具</li>
+          <li>不得建議超出使用者意圖的觸發範圍</li>
+          <li>不得在 ChatGPT 內販售數位內容、連到結帳頁</li>
+        </ul>
       </div>
     </div>
-    <div class="insight-blue" style="margin-top:18px">該篇中央社報導發出時，後 3 場比賽還沒開打——讀者照著引用去查，只能驗證 5 場中的 2 場。</div>
+    <div class="insight" style="margin-top:18px">9/25 首次送審退件（名稱不清楚、描述含偏好用語）→ 10/1 核准上架 → 10 月更新又被判「可購買數位圖片」→ <strong>商業字樣全面改中性</strong></div>
   </div>
 </div>
 
