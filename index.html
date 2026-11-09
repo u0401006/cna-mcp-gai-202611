@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>當 AI 成為新聞中介：MCP、可信來源與媒體的下一步｜中央社資訊暨創新中心</title>
+<style>
+  :root {
+    --bg: #EEF0F3;
+    --surface: #F8F9FB;
+    --surface2: #E4E7EC;
+    --accent: #315280;
+    --accent2: #B0842E;
+    --accent3: #A5342B;
+    --accent4: #2F6B4C;
+    --text: #141A22;
+    --muted: #697380;
+    --border: #D3D8DF;
+    --serif: Georgia, "Songti TC", "Noto Serif TC", "Source Han Serif TC", "PingFang TC", "Microsoft JhengHei", serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", 'Segoe UI', 'Helvetica Neue', sans-serif;
+    overflow: hidden;
+  }
+
+  #progress {
+    position: fixed; top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .35s ease;
+    z-index: 200;
+  }
+
+  #badge {
+    position: fixed; top: 10px; right: 14px;
+    font-size: 14px; color: var(--muted);
+    z-index: 200; letter-spacing: .04em;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  #deck {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0; transform: translateX(48px);
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: none; overflow: hidden;
+  }
+  .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+  .slide.exit   { opacity: 0; transform: translateX(-48px); }
+
+  .slide-body {
+    flex: 1; overflow-y: auto; padding: 28px 48px 16px;
+    max-width: 1120px; width: 100%; margin: 0 auto;
+  }
+  .slide-body::-webkit-scrollbar { width: 4px; }
+  .slide-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* COVER */
+  .cover {
+    background: radial-gradient(ellipse at 30% 20%, #F8F9FB 0%, #EEF0F3 62%);
+    justify-content: center; align-items: center; text-align: center; gap: 0;
+  }
+  .cover .slide-body {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 22px;
+    max-width: 1120px;
+  }
+  .cover-eyebrow {
+    font-size: 13px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .cover-title {
+    font-family: var(--serif);
+    font-size: clamp(40px, 7vw, 80px); font-weight: 700; line-height: 1.18;
+    letter-spacing: -.01em;
+  }
+  .cover-title-pair { font-size: clamp(12px, 4.4vw, 56px); line-height: 1.45; color: #000; }
+  .cover-title-pair > span { display: block; white-space: nowrap; }
+  .cover-title-pair > span + span { margin-top: 8px; }
+  .cover-title em { color: var(--accent); font-style: normal; }
+  .cover-sub {
+    font-size: clamp(16px, 1.9vw, 19px); color: var(--muted); max-width: 620px; line-height: 1.75;
+  }
+  .cover-meta {
+    font-size: 14px; color: var(--muted); border-top: 1px solid var(--border);
+    padding-top: 18px; width: 100%; max-width: 620px; text-align: center;
+  }
+  .cover-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; justify-content: center; }
+  .tag {
+    font-size: 13px; padding: 3px 10px; border-radius: 20px;
+    background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+  }
+
+  /* SECTION HEADER */
+  .slide-header {
+    padding: 24px 48px 0; max-width: 1120px; width: 100%; margin: 0 auto;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-num {
+    font-size: 13px; font-weight: 700; letter-spacing: .18em;
+    color: var(--accent); text-transform: uppercase;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(24px, 4vw, 36px); font-weight: 700; line-height: 1.24;
+  }
+  .section-title span { color: var(--accent2); }
+
+  .lede { font-size: 17px; line-height: 1.75; color: var(--muted); margin-top: 16px; max-width: 78ch; }
+  .lede strong { color: var(--text); }
+
+  /* QUOTE ROWS (headlines ticker) */
+  .quote-rows { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .quote-row {
+    background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent2);
+    border-radius: 0 8px 8px 0; padding: 12px 16px;
+    display: flex; align-items: baseline; gap: 14px; justify-content: space-between;
+  }
+  .quote-row .qt { font-size: 15.5px; line-height: 1.5; }
+  .quote-row .qd { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  /* STAT CARDS */
+  .stat-grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    margin-top: 20px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 18px;
+  }
+  .stat-card.accent { border-color: var(--accent); }
+  .stat-card.accent2 { border-color: var(--accent2); }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: clamp(32px, 4.6vw, 46px); font-weight: 700; line-height: 1;
+    letter-spacing: -.02em;
+  }
+  .stat-num.gold { color: var(--accent); }
+  .stat-num.blue { color: var(--accent2); }
+  .stat-sub { font-size: 13px; color: var(--muted); margin-top: 6px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .04em; }
+  .stat-label { font-size: 15.5px; color: var(--text); margin-top: 10px; line-height: 1.5; }
+  .stat-desc { font-size: 13.5px; color: var(--muted); margin-top: 8px; line-height: 1.55; border-top: 1px solid var(--border); padding-top: 8px; }
+
+  /* COMPARE TABLE */
+  .compare-table { margin-top: 18px; width: 100%; border-collapse: collapse; font-size: 15px; }
+  .compare-table th {
+    text-align: left; padding: 10px 12px; color: var(--muted);
+    border-bottom: 1px solid var(--border); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .compare-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); line-height: 1.5; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: var(--surface); }
+  .compare-table .ta-c { text-align: center; }
+
+  .chip {
+    display: inline-flex; align-items: center; font-size: 12.5px; padding: 4px 11px; border-radius: 20px;
+    background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+  }
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+  /* ECOSYSTEM / VALUE CARDS */
+  .eco-grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-top: 22px;
+  }
+  .eco-card {
+    background: var(--surface); border-left: 3px solid var(--accent2);
+    border-radius: 0 10px 10px 0; padding: 18px 20px;
+  }
+  .eco-card.g { border-color: var(--accent); }
+  .eco-card.r { border-color: var(--accent3); }
+  .eco-type { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 6px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .eco-name { font-family: var(--serif); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .eco-desc { font-size: 14.5px; color: var(--muted); line-height: 1.65; }
+
+  /* INSIGHT BOX */
+  .insight {
+    background: rgba(49,82,128,.07); border: 1px solid rgba(49,82,128,.22);
+    border-radius: 10px; padding: 16px 18px; margin-top: 18px;
+    font-size: 16px; line-height: 1.65;
+  }
+  .insight strong { color: var(--accent); }
+  .insight-blue {
+    background: rgba(176,132,46,.09); border: 1px solid rgba(176,132,46,.26);
+    border-radius: 10px; padding: 16px 18px; margin-top: 14px;
+    font-size: 16px; line-height: 1.65;
+  }
+  .insight-blue strong { color: var(--accent2); }
+
+  /* QUOTE */
+  .big-q {
+    font-family: var(--serif);
+    font-size: clamp(22px, 3.4vw, 32px); font-weight: 700;
+    line-height: 1.45; color: var(--text); margin-top: 22px;
+    padding: 22px 24px; border-left: 3px solid var(--accent);
+    background: var(--surface); border-radius: 0 10px 10px 0;
+  }
+  .big-q em { color: var(--accent); font-style: normal; }
+
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+  .label-row { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; margin-bottom: 8px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  /* CAPABILITY TAB CAROUSEL */
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 6px 0 28px; }
+  .tab-pill {
+    padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border);
+    font-size: 14px; color: var(--muted); background: var(--surface2);
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .tab-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .tab-pill.active {
+    background: var(--accent4); color: #F5FAF6; border-color: var(--accent4);
+    font-weight: 700;
+  }
+  .tab-pill.active .dot { background: #F5FAF6; }
+
+  /* CAPABILITY LAYOUT — left tab rail, right browser stage */
+  .cap-layout {
+    display: flex; gap: 32px; align-items: stretch;
+    height: calc(100% - 8px); margin-top: 4px;
+  }
+  .cap-tabs {
+    display: flex; flex-direction: column; gap: 8px;
+    flex: 0 0 200px; padding-top: 4px;
+  }
+  .cap-tabs .tab-pill { width: 100%; justify-content: flex-start; }
+  .cap-stage {
+    flex: 1; min-width: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cap-stage .browser-mock { width: 85%; }
+  @media (max-width: 760px) {
+    .cap-layout { flex-direction: column; height: auto; }
+    .cap-tabs { flex-direction: row; flex-wrap: wrap; justify-content: center; flex: none; }
+    .cap-tabs .tab-pill { width: auto; justify-content: center; }
+  }
+
+  /* BROWSER MOCK */
+  .browser-mock {
+    max-width: 731px; margin: 0 auto; border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border); background: #fff;
+    box-shadow: 0 1px 2px rgba(20,26,34,.06), 0 8px 28px rgba(20,26,34,.08);
+  }
+  .browser-bar {
+    height: 36px; background: #e7e9ee; display: flex; align-items: center;
+    gap: 7px; padding: 0 14px; position: relative;
+  }
+  .browser-bar .bdot { width: 11px; height: 11px; border-radius: 50%; }
+  .browser-bar .bdot.r { background: #ff5f57; }
+  .browser-bar .bdot.y { background: #febc2e; }
+  .browser-bar .bdot.g { background: #28c840; }
+  .browser-title {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    font-size: 12px; color: #6b7280; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .browser-body img { width: 100%; display: block; }
+  .browser-body { max-height: 80vh; overflow-y: auto; }
+
+  /* MEDIA FRAME — plain image / video card for non-browser demos */
+  .media-row { display: flex; gap: 24px; margin-top: 22px; flex-wrap: wrap; justify-content: center; }
+  .media-frame {
+    flex: 1 1 380px; max-width: 480px;
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(20,26,34,.06), 0 8px 28px rgba(20,26,34,.08);
+  }
+  .media-frame img, .media-frame video { width: 100%; display: block; max-height: 46vh; object-fit: contain; background: #0a0a0a; }
+  .media-caption { padding: 10px 16px; font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--border); }
+
+  /* MEDIA FRAME — full slide-body width */
+  .media-frame-full {
+    width: 100%; margin-top: 22px;
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(20,26,34,.06), 0 8px 28px rgba(20,26,34,.08);
+  }
+  .media-frame-full img { width: 100%; display: block; max-height: 58vh; object-fit: contain; background: #0a0a0a; }
+  .media-frame-full video { width: 100%; display: block; max-height: 76vh; object-fit: contain; background: #0a0a0a; }
+  .media-frame-full iframe { width: 100%; display: block; border: none; height: 80vh; background: #0a0a0a; }
+
+  /* SOURCE */
+  .source { font-size: 13px; color: var(--muted); margin-top: 18px; }
+  .source a { color: var(--muted); }
+
+  #kbdHint {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    font-size: 13px; color: var(--muted); background: var(--surface2);
+    padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border);
+    transition: opacity .5s; pointer-events: none;
+    z-index: 200;
+  }
+  #kbdHint.hidden { opacity: 0; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .funding-note {
+    position: absolute; left: 0; right: 0; bottom: 20px;
+    text-align: center; font-size: 12px; color: var(--muted);
+    letter-spacing: .02em; z-index: 5; padding: 0 24px;
+  }
+
+  @media (min-width: 768px) {
+    #deck { left: 4%; right: 4%; }
+    #badge { right: calc(4% + 14px); }
+  }
+
+  /* Communication diagrams — reuse the deck's palette and typography */
+  .comm-frame { margin-top: 18px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+  .comm-scroll { overflow-x: auto; }
+  .comm-flow { display: flex; align-items: stretch; gap: 8px; min-width: 690px; }
+  .comm-node { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; line-height: 1.5; }
+  .comm-node small { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
+  .comm-node.media { border-color: var(--accent); color: var(--accent); background: rgba(49,82,128,.05); }
+  .comm-node.ai { border-color: var(--accent2); color: var(--accent2); background: rgba(176,132,46,.07); }
+  .comm-arrow { align-self: center; color: var(--muted); font-size: 20px; flex: none; }
+  .comm-feedback { margin-top: 8px; text-align: right; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+  .comm-frame .label-row { margin-bottom: 10px; }
+  .allocation-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: stretch; margin-top: 22px; }
+  .allocation-grid .eco-card { padding: 22px; }
+  .allocation-grid .eco-desc { font-size: 16px; line-height: 1.9; }
+  .trust-flow .comm-node { padding: 18px 8px; }
+  .cover-sub strong { color: var(--text); }
+  @media (max-width: 640px) {
+    .allocation-grid { grid-template-columns: 1fr; gap: 10px; }
+    .allocation-grid > .comm-arrow { justify-self: center; transform: rotate(90deg); }
+    .comm-frame { padding: 14px; }
+  }
+  /* TREND CHART */
+  .chart-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin-top: 18px;
+  }
+  .chart-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-legend i { display: inline-block; width: 16px; height: 0; border-top: 3px solid; }
+  .chart-legend i.dash { border-top-style: dashed; }
+  .chart-legend i.dot { border-top-style: dotted; }
+  .chart-wrap { position: relative; height: 230px; }
+  .chart-cap { font-size: 12.5px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+
+
+  /* Preliminary evaluation results */
+  .eval-results .section-title { font-size: clamp(22px, 2.6vw, 32px); }
+  .eval-results .section-num { white-space: nowrap; }
+  .eval-results .slide-body { padding-top: 18px; }
+  .eval-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .eval-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; min-width: 0; }
+  .eval-card h3 { font-family: var(--serif); font-size: 22px; line-height: 1.4; }
+  .eval-meta { color: var(--muted); font-size: 12.5px; line-height: 1.6; margin: 10px 0 14px; }
+  .eval-bar-row { display: grid; grid-template-columns: 116px minmax(0,1fr) 56px; gap: 8px; align-items: center; margin: 12px 0; font-size: 14px; }
+  .eval-bar-label { text-align: right; }
+  .eval-bar-track { height: 29px; }
+  .eval-bar-fill { height: 100%; background: #A2ADBD; border-radius: 0 6px 6px 0; }
+  .eval-highlight { color: var(--accent); font-weight: 700; }
+  .eval-highlight .eval-bar-fill { background: var(--accent); }
+  .eval-bar-value { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; }
+  .eval-axis { display: flex; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 6px; margin: 8px 0 0 124px; color: var(--muted); font-size: 11.5px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .eval-note { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 16px; font-size: 14px; line-height: 1.75; }
+  .eval-note strong { color: var(--accent); }
+  .eval-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .eval-stat { background: var(--bg); border-radius: 10px; text-align: center; padding: 10px 3px; }
+  .eval-stat b { display: block; font-size: 26px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .eval-stat span { display: block; color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .eval-sites-title { font-size: 12.5px; line-height: 1.6; margin: 12px 0 8px; }
+  .eval-sites-title span { color: var(--muted); font-weight: 400; }
+  .eval-sites .eval-bar-row { grid-template-columns: 154px minmax(0,1fr) 28px; font-size: 11px; gap: 6px; margin: 5px 0; }
+  .eval-sites .eval-bar-track { height: 12px; }
+  .eval-sites .eval-bar-label { font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .eval-sites .eval-axis { margin-left: 160px; }
+  @media (max-width: 850px) { .eval-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) {
+    .eval-card { padding: 14px; }
+    .eval-bar-row { grid-template-columns: 100px minmax(0,1fr) 48px; font-size: 12px; gap: 5px; }
+    .eval-axis { margin-left: 105px; }
+    .eval-sites .eval-bar-row { grid-template-columns: 142px minmax(0,1fr) 24px; font-size: 10px; gap: 4px; }
+    .eval-sites .eval-axis { margin-left: 146px; }
+  }
+
+  /* CASE STUDY LAYOUT — question + numbered steps (left) / source panel (right) */
+  .case-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 36px; margin-top: 8px; align-items: start; }
+  .case-q { font-size: 15.5px; line-height: 1.7; color: var(--text); }
+  .case-answer { margin-top: 10px; font-size: 15.5px; }
+  .step-list { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+  .step-item { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num {
+    flex: none; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-title { font-size: 15.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .step-desc { font-size: 13.5px; color: var(--muted); margin-top: 3px; line-height: 1.55; }
+  .pill-correct {
+    display: inline-flex; align-items: center; font-size: 12px; font-weight: 700;
+    color: #fff; background: var(--accent4); padding: 2px 11px; border-radius: 20px;
+  }
+  .source-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  .source-panel .label-row { margin-bottom: 12px; }
+  .source-bar-row { display: grid; grid-template-columns: 100px minmax(0,1fr) 26px; gap: 10px; align-items: center; margin: 9px 0; font-size: 14.5px; }
+  .source-bar-label { font-weight: 600; }
+  .source-bar-track { height: 24px; }
+  .source-bar-fill { height: 100%; border-radius: 0 6px 6px 0; background: #C3CAD3; }
+  .source-bar-row.gold .source-bar-fill { background: var(--accent2); }
+  .source-bar-row.gold .source-bar-label { color: var(--accent2); }
+  .source-bar-row.blue .source-bar-fill { background: var(--accent); }
+  .source-bar-row.blue .source-bar-label { color: var(--accent); font-weight: 700; }
+  .source-bar-value { text-align: right; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; }
+  .source-quotes { margin-top: 18px; }
+  .source-quotes .quote-row .qt { font-size: 14px; }
+  .source-quotes .qt b { font-family: ui-monospace, Menlo, Consolas, monospace; color: var(--accent2); font-weight: 700; }
+  @media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<span id="badge">1 / 35</span>
+
+<div id="deck">
+
+<!-- SLIDE 1: COVER -->
+<div class="slide cover active">
+  <div class="slide-body">
+    <div class="cover-eyebrow">中央社</div>
+    <div class="cover-title cover-title-pair"><span>當 AI 成為<em>新聞中介</em></span><span><em>MCP</em>、<em>可信來源</em>與<em>媒體</em>的下一步</span></div>
+    <div class="cover-sub">
+      從傳播中介的轉變，談新聞來源、編輯責任與信任；當 AI 協助整理資訊，媒體如何把更多資源投入現場、追問與查證。
+    </div>
+    <div class="cover-meta">
+      宋育泰 · 2026/10/3
+      <div class="cover-tags">
+        <span class="tag">AI Agent</span>
+        <span class="tag">AI 中介</span>
+        <span class="tag">中央社 MCP</span>
+        <span class="tag">新聞信任</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: AI使用調查 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">AI <span>使用調查</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">開始之前，先做個小調查——舉手讓我們看看在座的使用習慣。</p>
+    <div class="two-col">
+      <div class="stat-card accent">
+        <div class="stat-label">Q1　你有為 AI 工具付費嗎？</div>
+        <div class="chip-row">
+          <span class="chip">有付費</span>
+          <span class="chip">沒付費</span>
+        </div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-label">Q2　你最常用哪一個？</div>
+        <div class="chip-row">
+          <span class="chip">ChatGPT</span>
+          <span class="chip">Claude</span>
+          <span class="chip">Gemini</span>
+          <span class="chip">Grok</span>
+          <span class="chip">DeepSeek</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: 代理人 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">代理人<span>是什麼</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="big-q">「<em>AI Agent 是什麼？</em>跟 Chatbot 有什麼不同？」</div>
+    <table class="compare-table">
+      <tr><th>比較項目</th><th>Chatbot</th><th>AI Agent</th></tr>
+      <tr><td>互動方式</td><td>一問一答，等你下一步指令</td><td>接到目標後自主拆解、連續執行多步驟</td></tr>
+      <tr><td>是否能採取行動</td><td>只能產生文字回覆</td><td>能呼叫工具、查資料、寫檔案、下指令</td></tr>
+      <tr><td>記憶與狀態</td><td>單輪對話，較少延續脈絡</td><td>能維持任務狀態，追蹤進度直到完成</td></tr>
+      <tr><td>適合情境</td><td>問答、發想、草擬文字</td><td>研究、剪輯、查核等需要多步驟的實際任務</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 4: 零點擊的時代 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">零點擊的<span>時代</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">路透新聞研究所2026年趨勢報告，Google等搜尋引擎正從「搜尋引擎」轉型為「答案引擎」，資訊直接在對話框中生成，使用者不再需要點擊連結進入新聞網站。媒體高層普遍預測，未來3年搜尋引擎導流可能下滑逾<strong>40%</strong>，廣告與訂閱轉換的關鍵入口因此萎縮。</p>
+    <div class="quote-rows">
+      <div class="quote-row"><span class="qt">「AI無償使用新聞內容　美媒網站流量雪崩聯手提告」</span><span class="qd">2025-07-10</span></div>
+      <div class="quote-row"><span class="qt">「生成式AI搶占搜尋流量　新聞網站面臨考驗」</span><span class="qd">2025-08-04</span></div>
+      <div class="quote-row"><span class="qt">「滾石雜誌出版商告Google　控AI摘要吸走流量」</span><span class="qd">2025-09-14</span></div>
+      <div class="quote-row"><span class="qt">「下令Google應允許網站退出AI搜尋　英國稱創全球首例」</span><span class="qd">2026-06-03</span></div>
+      <div class="quote-row"><span class="qt">「Google AI摘要奪流量成噩夢　法國媒體聯盟提申訴」</span><span class="qd">2026-08-11</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- COPIED: 發布簡報第 3、4 頁，中央社流量數據 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">零點擊的時代，<span>攤開中央社數據</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">不是只有國外媒體的觀察。2026/11/1–11/7 一週，中央社網站全站請求合計 3,766 萬次，同樣指向零點擊：<strong>看起來像真人的流量約六成</strong>，其餘四成是 AI bot 與其他服務型爬蟲。</p>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">60%</div>
+        <div class="stat-label">看起來像真人（Human-like）</div>
+        <div class="stat-desc">約 2,255 萬次請求，僅通過基本瀏覽器特徵判讀，未經 TLS 指紋等深度驗證。</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">11%</div>
+        <div class="stat-label">AI bot</div>
+        <div class="stat-desc">約 412 萬次請求，含訓練、AI 搜尋與使用者即時觸發類爬蟲。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">29%</div>
+        <div class="stat-sub">Google・Bing・Meta 分享預覽・Apple 等</div>
+        <div class="stat-label">其他 bot</div>
+        <div class="stat-desc">約 1,100 萬次請求，多為索引、分享預覽等服務型爬蟲。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">主機熱熱鬧鬧，<span>封不封都煩惱</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">8/5 封鎖 AI 訓練爬蟲後，訓練用途幾乎絕跡，但<strong>未被封鎖的 AI 搜尋／索引類爬蟲流量不減反增</strong>——內容仍被持續取用。</p>
+    <div class="chart-card">
+      <div class="chart-legend">
+        <span><i style="border-color:var(--accent)"></i>已封鎖的 AI 訓練爬蟲</span>
+        <span><i class="dash" style="border-color:var(--accent2)"></i>未封鎖的 AI 搜尋／使用者觸發</span>
+        <span><i class="dot" style="border-color:var(--accent4)"></i>已封鎖的中國搜尋引擎</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chTrend"></canvas></div>
+      <p class="chart-cap">主網站每日請求數（台北時間），2026/06/01–09/30。8/5 robots.txt 生效，隔天 8/6 起已封鎖的爬蟲幾乎同時停止。資料來源：GCP Load Balancer 請求紀錄。</p>
+    </div>
+    <table class="compare-table">
+      <tr><th>爬蟲</th><th class="ta-c">用途</th><th class="ta-c">封鎖前／日</th><th class="ta-c">封鎖後／日</th><th class="ta-c">變化</th></tr>
+      <tr><td>GPTBot</td><td class="ta-c">訓練（已封鎖）</td><td class="ta-c">19,270</td><td class="ta-c">15</td><td class="ta-c">−100%</td></tr>
+      <tr><td>ClaudeBot</td><td class="ta-c">訓練（已封鎖）</td><td class="ta-c">36,366</td><td class="ta-c">701</td><td class="ta-c">−98%</td></tr>
+      <tr><td>OAI-SearchBot</td><td class="ta-c">AI搜尋（未封鎖）</td><td class="ta-c">36,978</td><td class="ta-c">22,589</td><td class="ta-c">−39%</td></tr>
+      <tr><td>Claude-SearchBot</td><td class="ta-c">AI搜尋（未封鎖）</td><td class="ta-c">148</td><td class="ta-c">45,139</td><td class="ta-c"><strong style="color:var(--accent)">305 倍</strong></td></tr>
+      <tr><td>ExaSearchBot</td><td class="ta-c">AI搜尋（未封鎖）</td><td class="ta-c">1</td><td class="ta-c">16,516</td><td class="ta-c"><strong style="color:var(--accent)">新出現</strong></td></tr>
+      <tr><td>ChatGPT-User</td><td class="ta-c">使用者即時觸發</td><td class="ta-c">93,584</td><td class="ta-c">134,218</td><td class="ta-c">+43%</td></tr>
+    </table>
+    <div class="insight-blue">
+      <strong>10/8 晚間實例：</strong>Meta 官方索引爬蟲在 12 小時內把抓取量衝高 70 倍，一次重新索引近十年的舊文章 ——AI 系統掃描內容的速度，遠比真人讀者點閱更密集、更持續。
+    </div>
+    <div class="insight">
+      與其任由爬蟲用不受控、免費、甚至耗損主機資源的方式取用內容，<strong>中央社 MCP 提供一個可控、可溯源的對應管道</strong>——這正是零點擊時代，中央社選擇主動佈局 To A（Agent）的原因。
+    </div>
+  </div>
+</div>
+
+<!-- UPDATED 2026-11-08: TollBit AI 爬蟲週報（11/1–11/7） -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">爬蟲來了，<span>讀者沒來</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">10/8 起中央社以 TollBit 監測 AI 爬蟲。2026/11/1–11/7 一週，AI bot 嘗試抓取 412 萬次，只帶回 482 位讀者——<strong>每 4,307 次抓取，才換來 1 次造訪</strong>。</p>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">412萬</div>
+        <div class="stat-label">一週 AI 抓取</div>
+        <div class="stat-desc">較前週 +5.2%，占全站請求 10.9%；AI 流量多於 98% 的 TollBit 發布者。</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">4,307:1</div>
+        <div class="stat-label">抓取／轉介比</div>
+        <div class="stat-desc">帶回造訪較前週減少 15.3%，比值惡化 14.6%：抓得更多，回得更少。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1,074</div>
+        <div class="stat-label">越過 robots.txt 的嘗試</div>
+        <div class="stat-desc">已封鎖的訓練爬蟲仍持續叩門，其中 Meta 的 meta-externalagent 占 631 次。</div>
+      </div>
+    </div>
+    <table class="compare-table">
+      <tr><th>AI 平台</th><th class="ta-c">一週抓取</th><th class="ta-c">帶回造訪</th><th class="ta-c">抓取／轉介比</th></tr>
+      <tr><td>Exa</td><td class="ta-c">801,800</td><td class="ta-c">0</td><td class="ta-c">—</td></tr>
+      <tr><td>Meta</td><td class="ta-c">706,700</td><td class="ta-c">32</td><td class="ta-c">22,084:1</td></tr>
+      <tr><td>Keenable</td><td class="ta-c">595,300</td><td class="ta-c">0</td><td class="ta-c">—</td></tr>
+      <tr><td>OpenAI</td><td class="ta-c">526,100</td><td class="ta-c">84</td><td class="ta-c">6,263:1</td></tr>
+      <tr><td>Parallel</td><td class="ta-c">511,700</td><td class="ta-c">0</td><td class="ta-c"><strong style="color:var(--accent)">單週暴增 27 倍</strong></td></tr>
+      <tr><td>Perplexity</td><td class="ta-c">459,700</td><td class="ta-c">315</td><td class="ta-c"><strong style="color:var(--accent)">1,459:1（最佳）</strong></td></tr>
+      <tr><td>Anthropic</td><td class="ta-c">387,500</td><td class="ta-c">48</td><td class="ta-c">8,073:1</td></tr>
+    </table>
+    <div class="insight-blue">
+      <strong>新面孔最貪婪：</strong>Exa、Keenable、Parallel 三家新興 AI 搜尋商一週合計抓取逾 190 萬次，沒有帶回任何讀者；另有約 13 萬次抓取打在失效網址上，主機成本由媒體承擔。資料來源：TollBit 儀表板，2026/11/1–11/7。
+    </div>
+  </div>
+</div>
+
+<!-- ADDED: 傳播環境與 AI 中介 -->
+<div class="slide">
+  <div class="slide-header"><span class="section-num">04</span><h2 class="section-title">傳播的中介，<span>正在改變</span></h2></div>
+  <div class="slide-body">
+    <p class="lede">媒體原本同時組織新聞與閱讀；現在，<strong>AI 開始介入資訊選擇、重組與最後呈現</strong>。</p>
+    <div class="comm-frame">
+      <div class="label-row">過去｜媒體組織新聞與呈現</div>
+      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">新聞版面／節目</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
+      <div class="comm-feedback">閱聽人 ── 意見、投書與互動 ──→ 媒體（回饋）</div>
+    </div>
+    <div class="comm-frame">
+      <div class="label-row">現在的一條新路徑｜AI 介入閱讀入口</div>
+      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">採訪與編輯查證</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">新聞資料</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ai">AI 選擇與重組</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">使用者</div></div></div>
+      <div class="comm-feedback">政府與其他資訊來源 ──→ AI　｜　使用者 ── 提問與追問 ──→ AI（回饋）</div>
+    </div>
+    <div class="insight">媒體仍在生產新聞，但<strong>閱讀入口與最後呈現，逐漸由 AI 中介</strong>。</div>
+    <p class="source">傳播流程概念簡圖。平台推薦與直接閱讀仍然存在；AI 對話是新增的路徑。</p>
+</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header"><span class="section-num">05</span><h2 class="section-title">誰決定你<span>看見什麼？</span></h2></div>
+  <div class="slide-body">
+    <p class="lede">當閱讀入口變成對話框，選擇與詮釋仍然存在，<strong>只是更不容易被看見</strong>。</p>
+    <table class="compare-table">
+      <thead><tr><th scope="col">傳播環節</th><th scope="col">從你的 AI 使用經驗追問</th></tr></thead>
+      <tbody>
+        <tr><td>守門</td><td>AI 為什麼選這些來源？誰沒有被納入？</td></tr>
+        <tr><td>框架</td><td>同一事件，被整理成經濟問題，還是人權問題？</td></tr>
+        <tr><td>回饋</td><td>你的問法，如何影響得到的答案？</td></tr>
+        <tr><td>可信度</td><td>答案很流暢，你能找到它的證據嗎？來源真的支持結論嗎？</td></tr>
+      </tbody>
+    </table>
+    <div class="big-q">從「AI 怎麼回答」再往前問：<em>它根據什麼回答？</em></div>
+    <div class="insight">中央社 MCP 提供一條讓 AI 取得新聞與來源資訊的管道；<strong>取得來源之後，仍須檢查脈絡與引用是否正確</strong>。</div>
+</div>
+</div>
+
+<!-- SLIDE 5: 中央社有什麼 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">中央社<span>有什麼</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">以三大旗艦資料庫構成核心。這不是一次倒出供 LLM 訓練的靜態語料，而是每日持續更新的最新資訊、歷來第一手台灣紀錄。</p>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">478萬+</div>
+        <div class="stat-sub">1990 – 2026 · 歷史新聞</div>
+        <div class="stat-label">歷史新聞資料庫</div>
+        <div class="stat-desc">中央社 1990 年至今累積的新聞稿件，涵蓋外交、財經、政治、社會、兩岸、國際與生活全領域。</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">4.3萬+</div>
+        <div class="stat-sub">2000 – 2026 · 世界年鑑</div>
+        <div class="stat-label">世界年鑑資料庫</div>
+        <div class="stat-desc">中央社每年編纂的台灣與國際大事彙整，依「篇 → 章 → 文」三層結構編排。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">350萬+</div>
+        <div class="stat-sub">1924 – 2026 · 影像空間</div>
+        <div class="stat-label">影像空間資料庫</div>
+        <div class="stat-desc">中央社創立至今累積的新聞攝影檔案，附攝影記者署名、地點、人物、新聞專題標籤。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: 對於未來的想像 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">對於未來的<span>想像</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="big-q">「<em>可信新聞，用問的！</em>」</div>
+    <div class="insight">
+      <strong>一鍵把「台灣最可信的新聞來源」接進自己的 Claude／ChatGPT／Cursor／自建代理。</strong>MCP 是可信的「資料來源」層，讓任何 AI 應用的答案都基於查證過、可溯源的中央社內容。
+    </div>
+    <div class="insight-blue">
+      <strong>不只回文字：</strong>MCP 亦可直接回傳互動式視覺化元件呈現。一起來創造與體驗新時代的新聞閱讀體驗。
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: 中央社 MCP 的價值 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">08</span>
+    <h2 class="section-title">中央社 MCP 的<span>價值</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="eco-grid">
+      <div class="eco-card g">
+        <div class="eco-type">抗假訊息</div>
+        <div class="eco-name">可信的基座</div>
+        <div class="eco-desc">強制引用＋中央社事實檢證 SKILL＋抗幻覺，這是我們對抗 AI 幻覺與境外不實訊息的解方。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">主權 AI</div>
+        <div class="eco-name">新聞內容層</div>
+        <div class="eco-desc">讓模型在回答時翻一本「懂台灣」的參考書，不只依賴 LLM 訓練時倒入的簡中語料。</div>
+      </div>
+      <div class="eco-card r">
+        <div class="eco-type">垂直服務</div>
+        <div class="eco-name">可輸出的能力</div>
+        <div class="eco-desc">基於發展英／日／印尼多語網站的資料與經驗，長期累積的「譯名對照表」打造外語回答的基礎。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: 回答品質評測標準 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">09</span>
+    <h2 class="section-title">回答品質<span>評測標準</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">建置<strong>共 500 題的繁體中文新聞問答集</strong>，圍繞<strong>新聞領域知識</strong>設計評估框架，涵蓋人、事、時、地、物五種題型。</p>
+    <table class="compare-table">
+      <tr><th class="ta-c">題型</th><th>題目</th><th>標準答案</th></tr>
+      <tr><td class="ta-c">人</td><td>2008年民進黨總統大選中，謝長廷宣布由誰擔任副手？</td><td>蘇貞昌</td></tr>
+      <tr><td class="ta-c">事</td><td>2015年8月8日凌晨由花蓮縣秀林鄉登陸臺灣、造成全臺重大災情的超級颱風名稱是什麼？</td><td>蘇迪勒</td></tr>
+      <tr><td class="ta-c">時</td><td>美俄兩國簽署取代原「戰略武器裁減條約」的新裁減核武條約是哪一天？</td><td>2010年4月8日</td></tr>
+      <tr><td class="ta-c">地</td><td>2025年世界拳擊錦標賽在哪個城市舉行？</td><td>英國利物浦</td></tr>
+    </table>
+  </div>
+</div>
+
+
+<!-- ADDED: 初步回答品質評測結果 -->
+<div class="slide eval-results">
+  <div class="slide-header"><span class="section-num">初步結果</span><h2 class="section-title">MCP 在歷史資料上更準確，在即時新聞上<span>來源更可靠</span></h2></div>
+  <div class="slide-body">
+    <div class="eval-grid">
+      <div class="eval-card">
+        <h3>年鑑・單一事實題</h3>
+        <p class="eval-meta">500 題・gpt-5.4-mini（非推理）・整體作答正確率</p>
+        <div role="img" aria-label="模型加 MCP 正確率 81.0%，模型加網路搜尋 76.0%，純模型 40.6%">
+          <div class="eval-bar-row eval-highlight"><span class="eval-bar-label">模型＋MCP</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:81%"></div></div><span class="eval-bar-value">81.0%</span></div><div class="eval-bar-row"><span class="eval-bar-label">模型＋網路搜尋</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:76%"></div></div><span class="eval-bar-value">76.0%</span></div><div class="eval-bar-row"><span class="eval-bar-label">純模型</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:40.6%"></div></div><span class="eval-bar-value">40.6%</span></div>
+          <div class="eval-axis"><span>0</span><span>50</span><span>100%</span></div>
+        </div>
+        <p class="eval-note">純模型正確率不足五成；三種條件中以 <strong>MCP 正確率最高</strong>，較網路搜尋高 5 個百分點。</p>
+      </div>
+      <div class="eval-card">
+        <h3>即時新聞・跨文件整合題</h3>
+        <p class="eval-meta">前期測試 50 題・gpt-5.6-luna・2026 年 7 月新聞・整體作答正確率</p>
+        <div class="eval-stats">
+          <div class="eval-stat"><b>0%</b><span>純模型</span></div>
+          <div class="eval-stat"><b>96%</b><span>模型＋網路搜尋</span></div>
+          <div class="eval-stat"><b class="eval-highlight">94%</b><span>模型＋MCP</span></div>
+        </div>
+        <h4 class="eval-sites-title">網路搜尋最常引用的 10 個網站<span>（引用次數；共 1,790 次、388 個網站）</span></h4>
+        <div class="eval-sites">
+          <div class="eval-bar-row"><span class="eval-bar-label">reddit.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:92.80000000000001%"></div></div><span class="eval-bar-value">232</span></div><div class="eval-bar-row eval-highlight"><span class="eval-bar-label">cna.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:83.2%"></div></div><span class="eval-bar-value">208</span></div><div class="eval-bar-row"><span class="eval-bar-label">zh.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:51.2%"></div></div><span class="eval-bar-value">128</span></div><div class="eval-bar-row"><span class="eval-bar-label">youtube.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:36.8%"></div></div><span class="eval-bar-value">92</span></div><div class="eval-bar-row"><span class="eval-bar-label">fda.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:34%"></div></div><span class="eval-bar-value">85</span></div><div class="eval-bar-row"><span class="eval-bar-label">en.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:18.4%"></div></div><span class="eval-bar-value">46</span></div><div class="eval-bar-row"><span class="eval-bar-label">twse.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:17.2%"></div></div><span class="eval-bar-value">43</span></div><div class="eval-bar-row"><span class="eval-bar-label">gov.uk</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:13.200000000000001%"></div></div><span class="eval-bar-value">33</span></div><div class="eval-bar-row"><span class="eval-bar-label">hualien.forest.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:11.200000000000001%"></div></div><span class="eval-bar-value">28</span></div><div class="eval-bar-row"><span class="eval-bar-label">forest.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:10.8%"></div></div><span class="eval-bar-value">27</span></div>
+          <div class="eval-axis"><span>0</span><span>125</span><span>250 次</span></div>
+        </div>
+        <p class="eval-note">兩者正確率相近，但網路搜尋<strong>最常引用的網站是 reddit，次數高於中央社</strong>；MCP 的回答則來自中央社資料庫，以新聞報導為主，並輔以政府公開資料與法規。</p>
+      </div>
+    </div>
+    <p class="source">註：兩批測試採用的模型與題數不同，結果僅供初步參考。網路搜尋採模型內建搜尋功能。</p>
+  </div>
+</div>
+
+<!-- ADDED: 網路搜尋前測 二、三、四節 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">初步結果・50題綜觀</span>
+    <h2 class="section-title">檢索來源近三成未查證，<span>最終引用中央社最多</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="case-grid">
+      <div>
+        <div class="case-q">檢索過程混雜未經查證的內容；但模型最終下筆引用時，中央社是被引用最多的來源。</div>
+        <table class="compare-table" style="margin-top:18px">
+          <tr><th>最終引用的來源</th><th class="ta-c">共 62 次</th></tr>
+          <tr><td>中央社</td><td class="ta-c"><strong style="color:var(--accent)">26・41.9%</strong></td></tr>
+          <tr><td>台灣政府機關</td><td class="ta-c">15・24.2%</td></tr>
+          <tr><td>其他新聞媒體</td><td class="ta-c">10・16.1%</td></tr>
+          <tr><td>外國政府與國際組織</td><td class="ta-c">6・9.7%</td></tr>
+          <tr><td>其他網站</td><td class="ta-c">5・8.1%</td></tr>
+          <tr><td>reddit・維基百科・YouTube</td><td class="ta-c">0・0.0%</td></tr>
+        </table>
+        <div class="insight" style="margin-top:16px">50 題中有 <strong>33 題檢索到 reddit</strong>。reddit、維基百科、YouTube 合計占檢索來源的 <strong>28.0%</strong>，但最終回答均未引用。</div>
+      </div>
+      <div class="source-panel">
+        <div class="label-row">檢索到的來源（共 1,790 次・388 個網站）</div>
+        <div class="source-bar-row blue"><span class="source-bar-label">中央社</span><div class="source-bar-track"><div class="source-bar-fill" style="width:50.5%"></div></div><span class="source-bar-value">209</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">台灣政府機關</span><div class="source-bar-track"><div class="source-bar-fill" style="width:97.3%"></div></div><span class="source-bar-value">403</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">其他新聞媒體</span><div class="source-bar-track"><div class="source-bar-fill" style="width:77.3%"></div></div><span class="source-bar-value">320</span></div>
+        <div class="source-bar-row gold"><span class="source-bar-label">reddit</span><div class="source-bar-track"><div class="source-bar-fill" style="width:56.1%"></div></div><span class="source-bar-value">232</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">其他網站</span><div class="source-bar-track"><div class="source-bar-fill" style="width:59.4%"></div></div><span class="source-bar-value">246</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">維基百科</span><div class="source-bar-track"><div class="source-bar-fill" style="width:42.8%"></div></div><span class="source-bar-value">177</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">外國政府組織</span><div class="source-bar-track"><div class="source-bar-fill" style="width:26.8%"></div></div><span class="source-bar-value">111</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">YouTube</span><div class="source-bar-track"><div class="source-bar-fill" style="width:22.2%"></div></div><span class="source-bar-value">92</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">案例一・MH-014</span>
+    <h2 class="section-title">中國潛射彈道飛彈試射：<span>reddit 多於中央社</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="case-grid">
+      <div>
+        <div class="label-row">題目</div>
+        <div class="case-q">2026 年 7 月 6 日中國解放軍海軍戰略核潛艦向太平洋公海試射潛射彈道飛彈。從中國國防部通知日本駐北京大使館將進行發射，到中國官媒公布的實際發射時刻，相隔多久？</div>
+        <div class="case-answer"><strong>正解：1 小時 31 分鐘</strong></div>
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div><div class="step-title">搜尋 3 次</div><div class="step-desc">關鍵字含中國國防部、日本駐北京大使館、潛射彈道飛彈</div></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div><div class="step-title">檢索 18 個來源</div><div class="step-desc">其中 reddit 5 個、中央社 3 個</div></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div><div class="step-title">回答「1 小時 31 分鐘」<span class="pill-correct">正確</span></div><div class="step-desc">最終引用：中央社 1 篇（只涵蓋部分答案）</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="source-panel">
+        <div class="label-row">檢索來源（共 18 個）</div>
+        <div class="source-bar-row gold"><span class="source-bar-label">reddit</span><div class="source-bar-track"><div class="source-bar-fill" style="width:100%"></div></div><span class="source-bar-value">5</span></div>
+        <div class="source-bar-row blue"><span class="source-bar-label">中央社</span><div class="source-bar-track"><div class="source-bar-fill" style="width:60%"></div></div><span class="source-bar-value">3</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">中國國防部</span><div class="source-bar-track"><div class="source-bar-fill" style="width:60%"></div></div><span class="source-bar-value">3</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">YouTube</span><div class="source-bar-track"><div class="source-bar-fill" style="width:40%"></div></div><span class="source-bar-value">2</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">其他</span><div class="source-bar-track"><div class="source-bar-fill" style="width:100%"></div></div><span class="source-bar-value">5</span></div>
+        <div class="label-row" style="margin-top:18px">檢索到的 reddit 貼文（節錄）</div>
+        <div class="source-quotes quote-rows">
+          <div class="quote-row"><span class="qt"><b>r/China_irl</b>　看鉴中国：中国核潜艇试射导弹周边国家反应强烈，是过度解读还是透明度不足</span></div>
+          <div class="quote-row"><span class="qt"><b>r/LiberalGooseGroup</b>　中国在太平洋试射潜射弹道导弹激怒邻国</span></div>
+          <div class="quote-row"><span class="qt"><b>r/InsightBridge</b>　BBC：中国试射导弹 美国质疑暗扩核武库 澳洲斥挑衅</span></div>
+          <div class="quote-row"><span class="qt"><b>r/Taiwanese</b>　中國核潛艦試射刻意未先知會華府傳遞新訊號 北約秘書長怒轟</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">案例二・MH-140</span>
+    <h2 class="section-title">亞洲U18男排錦標賽：<span>檢索到無關的社群討論</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="case-grid">
+      <div>
+        <div class="label-row">題目</div>
+        <div class="case-q">在中國舉行的 2026 年亞洲 U18 男子排球錦標賽中，台灣隊從分組預賽首戰到 4 強戰（不含季軍戰）共打了 5 場比賽，這 5 場合計輸掉幾局？</div>
+        <div class="case-answer"><strong>正解：8 局</strong></div>
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <div><div class="step-title">搜尋 2 次</div><div class="step-desc">中英文各一次，關鍵字含亞洲U18男子排球、台灣、4強</div></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <div><div class="step-title">檢索 34 個來源</div><div class="step-desc">其中 reddit 7 個、維基百科 6 個、中央社 4 個</div></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <div><div class="step-title">回答「8 局」<span class="pill-correct">正確</span></div><div class="step-desc">最終引用：中央社 1 篇（只涵蓋部分答案）</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="source-panel">
+        <div class="label-row">檢索來源（共 34 個）</div>
+        <div class="source-bar-row gold"><span class="source-bar-label">reddit</span><div class="source-bar-track"><div class="source-bar-fill" style="width:63.6%"></div></div><span class="source-bar-value">7</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">維基百科</span><div class="source-bar-track"><div class="source-bar-fill" style="width:54.5%"></div></div><span class="source-bar-value">6</span></div>
+        <div class="source-bar-row blue"><span class="source-bar-label">中央社</span><div class="source-bar-track"><div class="source-bar-fill" style="width:36.4%"></div></div><span class="source-bar-value">4</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">自由時報</span><div class="source-bar-track"><div class="source-bar-fill" style="width:36.4%"></div></div><span class="source-bar-value">4</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">YouTube</span><div class="source-bar-track"><div class="source-bar-fill" style="width:18.2%"></div></div><span class="source-bar-value">2</span></div>
+        <div class="source-bar-row"><span class="source-bar-label">其他</span><div class="source-bar-track"><div class="source-bar-fill" style="width:100%"></div></div><span class="source-bar-value">11</span></div>
+        <div class="label-row" style="margin-top:18px">檢索到的 reddit 貼文（節錄）</div>
+        <div class="source-quotes quote-rows">
+          <div class="quote-row"><span class="qt"><b>r/LOOK_CHINA</b>　昨天亞運棒球臺灣3:7不敵日本，今天將要跟中國爭銅牌（棒球，非排球）</span></div>
+          <div class="quote-row"><span class="qt"><b>r/PakSports</b>　Reigning Asian U16 champions Pakistan placed in……（巴基斯坦U16排球）</span></div>
+          <div class="quote-row"><span class="qt"><b>r/PBA</b>　菲律賓職籃討論版貼文</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-blue" style="margin-top:18px">該篇中央社報導發出時，後 3 場比賽還沒開打——讀者照著引用去查，只能驗證 5 場中的 2 場。</div>
+  </div>
+</div>
+
+<!-- SYNCED: 最新中央社 MCP 案例，與 cna-mcp-launch.html 一致 -->
+<!-- SLIDE 8: 加掛能力 — 歷史新聞 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill active"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/6NCjS85.png" alt="歷史新聞示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: 加掛能力 — 最新新聞 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill active"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://ask.cna.com.tw/ask/mcp/latest-news.webp" alt="最新新聞示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: 加掛能力 — 新聞整理 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill active"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/PDUoLxE.png" alt="新聞整理示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: 加掛能力 — 時間軸 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill active"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/F6aFHwN.png" alt="時間軸示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: 加掛能力 — 懶人包 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill active"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://ask.cna.com.tw/ask/mcp/brief.webp" alt="懶人包示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: 加掛能力 — 知識圖譜 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill active"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://ask.cna.com.tw/ask/mcp/knowledge-graph.webp" alt="知識圖譜示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14: 加掛能力 — 事實查核 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill active"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/bMFiJwl.png" alt="事實查核示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15: 加掛能力 — 英文問TSMC -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill active"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/RqawVu1.png" alt="英文問TSMC示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16: 加掛能力 — 日文問TSMC -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill active"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/0OLXzGw.png" alt="日文問TSMC示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16.5: 加掛能力 — 取得素材授權 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill active"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/9qGBfrt.png" alt="取得素材授權示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 16.6: 加掛能力 — 看影片 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">加掛中央社 MCP<span>可以做到什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="cap-layout">
+      <div class="cap-tabs">
+        <span class="tab-pill"><span class="dot"></span>歷史新聞</span>
+        <span class="tab-pill"><span class="dot"></span>最新新聞</span>
+        <span class="tab-pill"><span class="dot"></span>新聞整理</span>
+        <span class="tab-pill"><span class="dot"></span>時間軸</span>
+        <span class="tab-pill"><span class="dot"></span>懶人包</span>
+        <span class="tab-pill"><span class="dot"></span>知識圖譜</span>
+        <span class="tab-pill"><span class="dot"></span>事實查核</span>
+        <span class="tab-pill"><span class="dot"></span>英文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>日文問TSMC</span>
+        <span class="tab-pill"><span class="dot"></span>取得素材授權</span>
+        <span class="tab-pill active"><span class="dot"></span>看影片</span>
+      </div>
+      <div class="cap-stage">
+        <div class="browser-mock">
+          <div class="browser-bar"><span class="bdot r"></span><span class="bdot y"></span><span class="bdot g"></span><span class="browser-title">claude.ai/chat</span></div>
+          <div class="browser-body"><img src="https://img-hosting.u0401006.workers.dev/i/AhFYcN9.png" alt="看影片示範" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18b: 這樣可以嗎？— 原況照片 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">11</span>
+    <h2 class="section-title">這樣<span>可以嗎？</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">AI 讓「產製」變得太容易，也把新聞倫理的界線推到新的位置——先看這段「原況照片」。</p>
+    <div class="media-frame-full">
+      <video src="https://u0401006.github.io/ai-era-news-2026/assets/realtime-photo.mov" controls preload="metadata" playsinline></video>
+      <div class="media-caption">原況照片 — 仔細看，它長高了</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18a: 這樣可以嗎？— 生成電視鏡面 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">11</span>
+    <h2 class="section-title">這樣<span>可以嗎？</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">AI 讓「產製」變得太容易，也把新聞倫理的界線推到新的位置——這樣可以嗎？</p>
+    <div class="media-frame-full">
+      <img src="https://u0401006.github.io/ai-era-news-2026/assets/TVBS.jpg" alt="生成電視鏡面" loading="lazy">
+      <div class="media-caption">生成電視鏡面 — 做得出來的請舉手</div>
+    </div>
+  </div>
+</div>
+
+<!-- CASE: 生成地圖 -->
+<div class="slide">
+  <div class="slide-header"><span class="section-num">11</span><h2 class="section-title">這樣<span>可以嗎？</span></h2></div>
+  <div class="slide-body">
+    <p class="lede"><strong>生成地圖，合適嗎？</strong>地圖上的位置、地名與相對關係，應該由誰確認？</p>
+    <div class="media-frame-full">
+      <img src="https://u0401006.github.io/fb-ai-map-error.png" alt="生成地圖案例，供課堂討論地理資訊正確性與查證責任" loading="lazy">
+      <div class="media-caption">生成地圖 — 看起來像地圖，就能當作正確的地理資訊嗎？</div>
+    </div></div>
+</div>
+
+<!-- CASE: 生成政治人物頭像 -->
+<div class="slide">
+  <div class="slide-header"><span class="section-num">11</span><h2 class="section-title">這樣<span>可以嗎？</span></h2></div>
+  <div class="slide-body">
+    <p class="lede"><strong>生成政治人物的頭像，合適嗎？</strong>標示「示意圖」之後，媒體還需要考慮哪些編輯責任？</p>
+    <div class="two-col">
+      <div class="media-frame">
+        <img src="https://img-hosting.u0401006.workers.dev/i/LSevomt.png" alt="案例一：合成場景示意圖" loading="lazy">
+        <div class="media-caption">案例一｜合成場景 — 將政治人物放入不同場景並搭配標題，會讓讀者產生什麼聯想？如何區分事實紀錄與編輯詮釋？</div>
+      </div>
+      <div class="media-frame">
+        <img src="https://img-hosting.u0401006.workers.dev/i/MOL3GHR.jpg" alt="案例二：漫畫化頭像對照" loading="lazy">
+        <div class="media-caption">案例二｜漫畫化頭像 — 當人物表情、外貌被重新繪製，是否加入了原始照片沒有的評價？圖像的情緒如何影響讀者判斷？</div>
+      </div>
+    </div>
+    <div class="big-q">從「做得出來」再往前問：<br><em>這樣呈現，會如何影響理解與信任？</em></div></div>
+</div>
+
+<!-- SLIDE 19b: 我們這樣做 AI Agent輔助剪輯 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">12</span>
+    <h2 class="section-title">「AI Agent 輔助剪輯」<span>不是「生成」</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">我們用 Agent 處理的是<strong>既有的真實素材</strong>——自動化剪輯、組稿、排列既有畫面，不是無中生有。</p>
+    <div class="media-frame-full" style="width:70%; margin-left:auto; margin-right:auto;">
+      <video src="https://u0401006.github.io/ai-era-news-2026/assets/agent-movie-maker.mov" controls preload="metadata" playsinline></video>
+    </div>
+  </div>
+</div>
+
+<!-- ADDED: 資源分配與新聞信任 -->
+<div class="slide">
+  <div class="slide-header"><span class="section-num">13</span><h2 class="section-title">省下的時間，<span>要放回哪裡？</span></h2></div>
+  <div class="slide-body">
+    <p class="lede">當整理既有資訊的成本下降，媒體更值得投資的，是<strong>取得新的事實</strong>。</p>
+    <div class="allocation-grid">
+      <div class="eco-card"><div class="eco-type">AI 協助處理</div><div class="eco-name">整理既有資訊</div><div class="eco-desc">逐字稿與資料初整<br>格式轉換<br>素材檢索<br>既有畫面的剪輯與排列</div></div>
+      <span class="comm-arrow" aria-hidden="true">→</span>
+      <div class="eco-card g"><div class="eco-type">媒體增加投入</div><div class="eco-name">走向更多現場</div><div class="eco-desc">現場採訪與消息來源經營<br>交叉查證與理解矛盾<br>追問尚未被回答的問題<br>長期追蹤與調查報導</div></div>
+    </div>
+    <div class="insight-blue">「更多現場」：看見資料沒有記錄的事，找到沒有被訪問的人，追問新聞稿沒有回答的問題。</div>
+    <div class="big-q">讓 AI 幫我們整理更多資料，<br><em>讓記者有時間走到更多現場。</em></div>
+</div>
+</div>
+
+<div class="slide">
+  <div class="slide-header"><span class="section-num">14</span><h2 class="section-title">信任，是怎麼<span>做出來的？</span></h2></div>
+  <div class="slide-body">
+    <p class="lede">可信度需要具體的工作與可檢驗的依據，也需要有人持續承擔<strong>編輯責任</strong>。</p>
+    <div class="comm-frame trust-flow">
+      <div class="label-row">建立信任的工作流程</div>
+      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node media">親自採訪<small>接觸現場與來源</small></div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">留下證據<small>記錄出處與脈絡</small></div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">交叉查證<small>比對說法與矛盾</small></div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">說明已知與未知<small>揭露限制與不確定</small></div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">公開更正與追蹤<small>署名並承擔責任</small></div></div></div>
+    </div>
+    <div class="two-col">
+      <div class="eco-card"><div class="eco-name">真實素材，也需要正確脈絡</div><div class="eco-desc">時間、地點與剪輯順序，都會影響讀者理解。使用真實畫面，仍須確認呈現方式。</div></div>
+      <div class="eco-card g"><div class="eco-name">有引用，也要檢查是否支持結論</div><div class="eco-desc">MCP 可協助取得資料與追溯來源；採訪、查證、編輯判斷與更正責任仍須落實。</div></div>
+    </div>
+    <div class="big-q">信任來自：<em>你如何知道，<br>以及你願意如何負責。</em></div>
+</div>
+</div>
+
+<!-- SLIDE 20: 要不要學程式？ -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">15</span>
+    <h2 class="section-title">要不要<span>學程式？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="insight"><strong>Prompt：</strong>仿照間諜家家酒的三大角色，把臉改成中年男子。</div>
+    <div class="media-frame-full">
+      <img src="https://u0401006.github.io/ai-era-news-2026/assets/mav_council-ojisan.png" alt="要不要學程式示範" loading="lazy">
+      <div class="media-caption">世界萬物皆有名字，有名字才能開始</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 21: 世界萬物皆有名字 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">16</span>
+    <h2 class="section-title">世界萬物皆有名字<span>有名字才能開始</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">Anthropic、OpenAI、xAI、Gemini —— 你選哪一個？</p>
+    <div class="media-frame-full">
+      <img src="https://u0401006.github.io/ai-era-news-2026/assets/mav_council_3.png" alt="世界萬物皆有名字" loading="lazy">
+      <div class="media-caption">小孩子才做選擇，我全都問</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 22: 大叔說教時間 -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">17</span>
+    <h2 class="section-title">大叔<span>說教時間</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="media-frame-full">
+      <img src="https://u0401006.github.io/ai-era-news-2026/assets/ending.png" alt="結語" loading="lazy">
+    </div>
+  </div>
+</div>
+
+</div><!-- #deck -->
+
+<div id="kbdHint">← → 切換 · 空白鍵下一張</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+(function(){
+  const TREND_LABELS = ["06/01","06/02","06/03","06/04","06/05","06/06","06/07","06/08","06/09","06/10","06/11","06/12","06/13","06/14","06/15","06/16","06/17","06/18","06/19","06/20","06/21","06/22","06/23","06/24","06/25","06/26","06/27","06/28","06/29","06/30","07/01","07/02","07/03","07/04","07/05","07/06","07/07","07/08","07/09","07/10","07/11","07/12","07/13","07/14","07/15","07/16","07/17","07/18","07/19","07/20","07/21","07/22","07/23","07/24","07/25","07/26","07/27","07/28","07/29","07/30","07/31","08/01","08/02","08/03","08/04","08/05","08/06","08/07","08/08","08/09","08/10","08/11","08/12","08/13","08/14","08/15","08/16","08/17","08/18","08/19","08/20","08/21","08/22","08/23","08/24","08/25","08/26","08/27","08/28","08/29","08/30","08/31","09/01","09/02","09/03","09/04","09/05","09/06","09/07","09/08","09/09","09/10","09/11","09/12","09/13","09/14","09/15","09/16","09/17","09/18","09/19","09/20","09/21","09/22","09/23","09/24","09/25","09/26","09/27","09/28","09/29","09/30"];
+  const TREND_TRAIN = [95121,113537,96192,144909,190008,144140,121514,114942,130041,148832,112141,124457,158376,169709,198216,210759,182166,180922,200846,127123,123287,163049,158027,121263,131381,122614,138982,127440,165834,216545,245424,180653,95755,79940,85274,87659,99915,91052,83806,80142,166586,93734,72285,96223,100887,92965,71159,69831,116049,86018,101878,84552,128858,126256,86052,91366,114529,103582,134524,132649,114655,140546,130293,170305,212581,166837,26424,946,1126,872,649,1245,1436,2405,3477,10008,1585,1581,1527,1944,5163,5178,985,623,843,1903,2134,3899,2915,2304,1439,1381,465,529,855,673,565,590,897,466,325,513,504,455,375,722,654,571,876,392,243,642,565,2568,714,358,532,552,406,1260,654,784];
+  const TREND_SEARCH = [134757,114649,105421,120197,114498,80806,81124,99366,119647,119879,120488,112686,92342,93385,124563,134147,129852,129197,95959,97001,101827,138302,134270,151651,158580,137272,117066,125549,146402,153739,162277,160275,150773,122041,123007,151977,172611,162498,223935,146501,135477,101204,128662,136787,180022,148630,153626,103758,125866,134177,138990,122441,143127,133792,113704,109057,150002,185518,151674,163987,164253,141145,135373,172160,129295,172410,192585,207611,249289,255764,282922,254563,242121,291346,284926,294829,241712,278292,301617,305621,270149,262805,191414,192011,224967,231136,267993,265666,208831,207374,227981,210202,215610,212488,215125,188745,213864,211854,222660,216669,130742,113550,104549,125441,191012,194575,171943,194269,202863,200085,139080,146213,155390,200435,214064,222738,245637,241663,235032,267893,303238,260304];
+  const TREND_CN = [50997,39202,59952,53893,59799,151959,151954,157193,178565,111476,100042,147296,155760,205605,113036,123696,134780,149880,185203,198785,179332,125436,94189,144770,176247,183525,154976,163252,183382,169902,151634,120328,189759,151401,147740,170738,196772,156433,176966,212075,147669,70113,156202,151359,68943,119987,117114,127745,142974,115372,143154,243545,137779,148193,144140,66504,158205,291503,296632,239236,160981,139128,175080,144186,146529,86846,132,155,484,345,294,269,259,430,313,237,385,194,483,327,354,324,208,251,248,254,206,194,482,273,267,317,344,272,235,253,332,262,366,336,259,238,338,328,1237,2305,3374,2609,4666,3088,2671,3009,2360,2692,3047,3580,2979,2890,46353,26924,35446,35600];
+
+  function drawTrend(){
+    const el = document.getElementById('chTrend');
+    if (!el || !window.Chart) return;
+    const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const mk = (label, data, color, dash) => ({
+      label, data, borderColor: css(color), backgroundColor: css(color),
+      borderWidth: 2, borderDash: dash || [], pointRadius: 0, tension: 0.2
+    });
+    new Chart(el, {
+      type: 'line',
+      data: {
+        labels: TREND_LABELS,
+        datasets: [
+          mk('已封鎖的 AI 訓練爬蟲', TREND_TRAIN, '--accent'),
+          mk('未封鎖的 AI 搜尋／使用者觸發', TREND_SEARCH, '--accent2', [6,4]),
+          mk('已封鎖的中國搜尋引擎', TREND_CN, '--accent4', [2,3])
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: c => `${c.dataset.label}：${Math.round(c.parsed.y).toLocaleString('en-US')}` } }
+        },
+        scales: {
+          x: { ticks: { color: css('--muted'), font: { size: 11 }, maxTicksLimit: 12 }, grid: { display: false } },
+          y: {
+            ticks: { color: css('--muted'), font: { size: 11 }, callback: v => v >= 10000 ? (v/10000).toFixed(0) + '萬' : v },
+            grid: { color: css('--border') }, beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', drawTrend);
+  else drawTrend();
+})();
+</script>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const TOTAL = slides.length;
+  let cur = 0;
+
+  const prog    = document.getElementById('progress');
+  const badge   = document.getElementById('badge');
+  const hint    = document.getElementById('kbdHint');
+
+  function render() {
+    slides.forEach(s => s.classList.remove('active','exit'));
+    slides[cur].classList.add('active');
+    const body = slides[cur].querySelector('.slide-body');
+    if (body) body.scrollTop = 0;
+    prog.style.width = ((cur + 1) / TOTAL * 100) + '%';
+    badge.textContent = `${cur + 1} / ${TOTAL}`;
+    document.querySelectorAll('.slide video').forEach(v => { if (!slides[cur].contains(v)) v.pause(); });
+  }
+
+  function go(dir) {
+    const nxt = cur + dir;
+    if (nxt < 0 || nxt >= TOTAL) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    const old = cur;
+    cur = nxt;
+    setTimeout(() => slides[old].classList.remove('exit'), 380);
+    render();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'VIDEO') return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 44) go(dx < 0 ? 1 : -1);
+  });
+
+  setTimeout(() => hint.classList.add('hidden'), 3500);
+  render();
+</script>
+</body>
+</html>
