@@ -474,110 +474,11 @@
 <!-- SLIDE: LLM語料訓練 -->
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">中央社，支持<span>台灣主權LLM</span>好不好</h2>
+    <h2 class="section-title">契機1：中央社，支持<span>台灣主權LLM</span>好不好</h2>
   </div>
   <div class="slide-body">
-    <p class="lede">好，哪次不支持。但動這麼快，對老身來說有點太劇烈了</p>
-    <div class="flow-diagram">
-      <div class="flow-node">ChatGPT</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">MidJourney</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">DeepSeek</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node accent2">主權 LLM</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">NanoBanana</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node accent">RAG</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">NotebookLM</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">WorkFlow / Agentic Skills</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node accent">MCP</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">OpenClaw</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node">GrokBot</div>
-    </div>
-  </div>
-</div>
-
-<div class="slide">
-  <div class="slide-header">
-    <h2 class="section-title">零點擊的時代，<span>攤開中央社數據</span></h2>
-  </div>
-  <div class="slide-body">
-    <p class="lede">2026/11/1–11/7 一週，中央社網站全站請求合計 3,700 萬次，零點擊不是國外的專利啊。</p>
-    <div class="stat-grid">
-      <div class="stat-card accent">
-        <div class="stat-num gold">60%</div>
-        <div class="stat-label">看起來像真人（Human-like）</div>
-        <div class="stat-desc">約 2,255 萬次請求，僅通過基本瀏覽器特徵判讀，未經 TLS 指紋等深度驗證。</div>
-      </div>
-      <div class="stat-card accent2">
-        <div class="stat-num blue">11%</div>
-        <div class="stat-label">AI bot</div>
-        <div class="stat-desc">約 412 萬次請求，含訓練、AI 搜尋與使用者即時觸發類爬蟲。</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">29%</div>
-        <div class="stat-sub">Google・Bing・Meta 分享預覽・Apple 等</div>
-        <div class="stat-label">其他 bot</div>
-        <div class="stat-desc">約 1,100 萬次請求，多為索引、分享預覽等服務型爬蟲。</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="slide">
-  <div class="slide-header">
-    <h2 class="section-title">主機熱熱鬧鬧，<span>封不封都煩惱</span></h2>
-  </div>
-  <div class="slide-body">
-    <p class="lede">8/5 封鎖 AI 訓練爬蟲後，訓練用途幾乎絕跡，但<strong>未被封鎖的 AI 搜尋／索引類爬蟲流量不減反增</strong>——內容仍被持續取用。</p>
-    <div class="chart-card">
-      <div class="chart-legend">
-        <span><i style="border-color:var(--accent)"></i>已封鎖的 AI 訓練爬蟲</span>
-        <span><i class="dash" style="border-color:var(--accent2)"></i>未封鎖的 AI 搜尋／使用者觸發</span>
-        <span><i class="dot" style="border-color:var(--accent4)"></i>已封鎖的中國搜尋引擎</span>
-      </div>
-      <div class="chart-wrap"><canvas id="chTrend"></canvas></div>
-      <p class="chart-cap">主網站每日請求數（台北時間），2026/06/01–09/30。8/5 robots.txt 生效，隔天 8/6 起已封鎖的爬蟲幾乎同時停止。資料來源：GCP Load Balancer 請求紀錄。</p>
-    </div>
-    <div class="insight">
-      與其任由爬蟲用不受控、免費、甚至耗損主機資源的方式取用內容，<strong>中央社 MCP 提供一個可控、可溯源的對應管道</strong>——這是零點擊時代，中央社佈局 To A（Agent）的原因。
-    </div>
-  </div>
-</div>
-
-<div class="slide">
-  <div class="slide-header"><h2 class="section-title">傳播的中介，<span>正在改變</span></h2></div>
-  <div class="slide-body">
-    <p class="lede">媒體原本同時組織新聞與閱讀；現在，<strong>AI 開始介入資訊選擇、重組與最後呈現</strong>。</p>
-    <div class="comm-frame">
-      <div class="label-row">過去｜媒體組織新聞與呈現</div>
-      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">新聞版面／節目</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
-      <div class="comm-feedback">閱聽人 ── 意見、投書與互動 ──→ 媒體（回饋）</div>
-    </div>
-    <div class="comm-frame">
-      <div class="label-row">現在的一條新路徑｜AI 介入閱讀入口</div>
-      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">採訪與編輯查證</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">新聞資料</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ai">AI 選擇與重組</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">使用者</div></div></div>
-      <div class="comm-feedback">政府與其他資訊來源 ──→ AI　｜　使用者 ── 提問與追問 ──→ AI（回饋）</div>
-    </div>
-    <div class="insight">媒體仍在生產新聞，但<strong>發布與呈現，逐漸由 AI 中介</strong>。</div>
-</div>
-</div>
-
-
-
-<div class="slide">
-  <div class="slide-header">
-    <h2 class="section-title">中央社<span>有什麼</span></h2>
-  </div>
-  <div class="slide-body">
-    <p class="lede">以三大旗艦資料庫構成核心。不是一次性 LLM 訓練的靜態語料，每日持續更新的最新資訊、歷來第一手台灣紀錄。</p>
+    <p class="lede">好啦，哪次不支持。</p>
+    <p class="lede">中央社有什麼？</p>
     <div class="stat-grid">
       <div class="stat-card accent">
         <div class="stat-num gold">478萬+</div>
@@ -601,8 +502,70 @@
   </div>
 </div>
 
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">契機2：零點擊的時代，<span>攤開中央社數據</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">2026/11/1–11/7 一週，中央社網站全站請求合計 3,700 萬次，零點擊不是國外的專利啊。</p>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">20%</div>
+        <div class="stat-label">真人</div>
+        <div class="stat-desc">約 740 萬次請求</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">40%</div>
+        <div class="stat-label">看起來像真人（Human-like）</div>
+        <div class="stat-desc">約 1,480 萬次請求，裡面可能有真人、也有自動化機制開啟網頁。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">40%</div>
+        <div class="stat-label">爬蟲大軍</div>
+        <div class="stat-desc">約 412 萬次請求，含訓練、AI 搜尋；使用者即時觸發類爬蟲約 1,100 萬次請求，多為索引、分享預覽等服務型爬蟲。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">主機熱熱鬧鬧，<span>封不封都煩惱</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">8/5 封鎖 AI 訓練爬蟲後，訓練用途幾乎絕跡，但<strong>未被封鎖的 AI 搜尋／索引類爬蟲流量不減反增</strong>——內容仍被持續取用。</p>
+    <div class="chart-card">
+      <div class="chart-legend">
+        <span><i style="border-color:var(--accent)"></i>已封鎖的 AI 訓練爬蟲</span>
+        <span><i class="dash" style="border-color:var(--accent2)"></i>未封鎖的 AI 搜尋／使用者觸發</span>
+        <span><i class="dot" style="border-color:var(--accent4)"></i>已封鎖的中國搜尋引擎</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chTrend"></canvas></div>
+      <p class="chart-cap">主網站每日請求數（台北時間），2026/06/01–09/30。8/5 robots.txt 生效，隔天 8/6 起已封鎖的爬蟲幾乎同時停止。</p>
+    </div>
+    <div class="insight">
+      與其任由爬蟲不受控、免費、甚至耗損主機資源的方式取走內容，<strong>中央社 MCP 是零點擊時代，中央社佈局 To A（Agent）的原因。
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <div class="slide-header"><h2 class="section-title">傳播的中介，<span>正在改變</span></h2></div>
+  <div class="slide-body">
+    <p class="lede">媒體原本同時組織新聞與閱讀；現在，<strong>AI 開始介入資訊選擇、重組與最後呈現</strong>。</p>
+    <div class="comm-frame">
+      <div class="label-row">過往新聞產製與閱讀流程</div>
+      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">新聞版面／節目</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
+    </div>
+    <div class="comm-frame">
+      <div class="label-row">現在 AI Agent 介入</div>
+      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><div class="comm-node ">歷史/參考資料</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ai">AI 選擇與重組</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
+    </div>
+</div>
+</div>
+
 <div class="slide eval-results">
-  <div class="slide-header"><span class="section-num">初步結果</span><h2 class="section-title">MCP 在歷史資料上更準確，在即時新聞上<span>來源更可靠</span></h2></div>
+  <div class="slide-header"><h2 class="section-title">MCP 在歷史資料上更準確，在即時新聞上<span>來源更可靠</span></h2></div>
   <div class="slide-body">
     <div class="eval-grid">
       <div class="eval-card">
@@ -615,19 +578,14 @@
         <p class="eval-note">純模型正確率不足五成；三種條件中以 <strong>MCP 正確率最高</strong>，較網路搜尋高 5 個百分點。</p>
       </div>
       <div class="eval-card">
-        <h3>跨文件整合題</h3>
-        <p class="eval-meta">50 題・gpt-5.6-luna・2026 年 7 月新聞・整體作答正確率</p>
-        <div class="eval-stats">
-          <div class="eval-stat"><b>0%</b><span>純模型</span></div>
-          <div class="eval-stat"><b>96%</b><span>模型＋網路搜尋</span></div>
-          <div class="eval-stat"><b class="eval-highlight">94%</b><span>模型＋MCP</span></div>
-        </div>
+        <h3>Agents都去哪裡找資料？</h3>
+        <p class="eval-meta">2026 年 7 月・新聞 50 題・gpt-5.6-luna</p>
         <h4 class="eval-sites-title">網路搜尋最常引用的 10 個網站<span>（引用次數；共 1,790 次、388 個網站）</span></h4>
         <div class="eval-sites">
           <div class="eval-bar-row"><span class="eval-bar-label">reddit.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:92.80000000000001%"></div></div><span class="eval-bar-value">232</span></div><div class="eval-bar-row eval-highlight"><span class="eval-bar-label">cna.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:83.2%"></div></div><span class="eval-bar-value">208</span></div><div class="eval-bar-row"><span class="eval-bar-label">zh.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:51.2%"></div></div><span class="eval-bar-value">128</span></div><div class="eval-bar-row"><span class="eval-bar-label">youtube.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:36.8%"></div></div><span class="eval-bar-value">92</span></div><div class="eval-bar-row"><span class="eval-bar-label">fda.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:34%"></div></div><span class="eval-bar-value">85</span></div><div class="eval-bar-row"><span class="eval-bar-label">en.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:18.4%"></div></div><span class="eval-bar-value">46</span></div><div class="eval-bar-row"><span class="eval-bar-label">twse.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:17.2%"></div></div><span class="eval-bar-value">43</span></div><div class="eval-bar-row"><span class="eval-bar-label">gov.uk</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:13.200000000000001%"></div></div><span class="eval-bar-value">33</span></div><div class="eval-bar-row"><span class="eval-bar-label">hualien.forest.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:11.200000000000001%"></div></div><span class="eval-bar-value">28</span></div><div class="eval-bar-row"><span class="eval-bar-label">forest.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:10.8%"></div></div><span class="eval-bar-value">27</span></div>
           <div class="eval-axis"><span>0</span><span>125</span><span>250 次</span></div>
         </div>
-        <p class="eval-note">兩者正確率相近，但網路搜尋<strong>最常引用的網站是 reddit，次數高於中央社</strong>；MCP 的回答則來自中央社資料庫，以新聞報導為主，並輔以政府公開資料與法規。</p>
+        <p class="eval-note">沒掛CNA MCP，網路搜尋<strong>最常引用的網站是 reddit，次數高於中央社</strong>；MCP 的回答則來自中央社資料庫，以新聞報導為主，並輔以政府公開資料與法規。</p>
       </div>
     </div>
   </div>
@@ -635,7 +593,7 @@
 
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">中國潛射彈道飛彈試射：<span>reddit</span>多於中央社</h2>
+    <h2 class="section-title">中國試射彈道飛彈：<span>reddit</span>多於中央社</h2>
   </div>
   <div class="slide-body">
     <div class="case-grid">
