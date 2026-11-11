@@ -558,7 +558,7 @@
     </div>
     <div class="comm-frame">
       <div class="label-row">現在 AI Agent 介入</div>
-      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><div class="comm-node ">歷史/參考資料</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ai">AI 選擇與重組</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
+      <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><span class="comm-arrow" aria-hidden="true">＋</span><div class="comm-node ">歷史/參考資料</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ai">AI 選擇與重組</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
     </div>
 </div>
 </div>
@@ -654,13 +654,13 @@
       <div class="eco-card">
         <div class="eco-type">掉分原因</div>
         <div class="eco-name">掉分的題目，多半是選錯工具</div>
-        <ul style="padding-left:20px;margin-top:8px;font-size:14.5px;color:var(--muted);line-height:1.7">
-          <li>問「哪天三讀」「何時上路」，被「法規」兩字吸走</li>
-          <li>35 題第一步就查法規庫，其中 30 題沒再回頭查新聞</li>         
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7">
+          <li>比較弱的模型面對「哪天三讀」「何時上路」，會被「法規」兩字吸走</li>
+          <li>35 題第一步就查法規庫，其中 30 題，沒再回頭查新聞</li>         
         </ul>
       </div>
     </div>
-    <div class="insight-blue" style="margin-top:18px">Twinkle AI 這類開放資料 hub，每支工具分工明確；中央社新聞什麼主題都有，<strong>路由很難切乾淨</strong>。</div>
+    <div class="insight-blue" style="margin-top:18px">中央社新聞什麼主題都有，<strong>路由很難切乾淨</strong>。還有多細緻化的作法減少發生 zero hit 的況。</div>
   </div>
 </div>
 
@@ -673,11 +673,11 @@
       <div class="eco-card g" style="background:var(--accent);color:#fff">
         <div class="eco-type" style="color:var(--accent2)">理想很豐滿</div>
         <div class="eco-name" style="color:#fff">裝了中央社 MCP，模型查新聞時就優先用我們，補強 web search。</div>
-        <div style="font-size:14.5px;color:#C7D2E0;margin-top:10px;line-height:1.6">工具說明曾寫：「新聞搜尋的預設工具」「優先於 web search」「任一符合即應呼叫」</div>
+        <div style="color:#C7D2E0;margin-top:10px;line-height:1.6">工具說明曾寫：「新聞搜尋的預設工具」「優先於 web search」「任一符合即應呼叫」</div>
       </div>
       <div class="source-panel">
         <div class="label-row">現實很骨感...OpenAI 明文禁止</div>
-        <ul style="padding-left:20px;margin-top:8px;font-size:14.5px;color:var(--muted);line-height:1.7">
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7">
           <li>任何模型讀得到的欄位，都不得引導模型偏好自家、貶低他家</li>
           <li>不得指示模型去呼叫別的工具</li>
           <li>不得建議超出使用者意圖的觸發範圍</li>
