@@ -535,22 +535,21 @@
     <h2 class="section-title">契機2：零點擊的時代，<span>攤開中央社數據</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">2026/11/1–11/7 一週，中央社網站全站請求合計 3,700 萬次，零點擊不是國外的專利啊。</p>
+    <p class="lede">零點擊不是國外的專利啊。我們也有</p>
     <div class="stat-grid">
       <div class="stat-card accent">
         <div class="stat-num gold">20%</div>
         <div class="stat-label">真人</div>
-        <div class="stat-desc">約 740 萬次請求</div>
       </div>
       <div class="stat-card accent2">
         <div class="stat-num blue">40%</div>
         <div class="stat-label">看起來像真人</div>
-        <div class="stat-desc">約 1,480 萬次請求，裡面可能有真人、也有自動化機制開啟網頁。</div>
+        <div class="stat-desc">可能有真人、也有自動化機制開啟網頁。</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">40%</div>
         <div class="stat-label">爬蟲大軍</div>
-        <div class="stat-desc">約 412 萬次請求，含訓練、AI 搜尋；使用者即時觸發類爬蟲約 1,100 萬次請求，多為索引、分享預覽等服務型爬蟲。</div>
+        <div class="stat-desc">含 AI 訓練、AI 搜尋、搜尋索引、分享預覽等服務。</div>
       </div>
     </div>
   </div>
@@ -569,7 +568,7 @@
         <span><i class="dot" style="border-color:var(--accent4)"></i>已封鎖的中國搜尋引擎</span>
       </div>
       <div class="chart-wrap"><canvas id="chTrend"></canvas></div>
-      <p class="chart-cap">主網站每日請求數（台北時間），2026/06/01–09/30。8/5 robots.txt 生效，隔天 8/6 起已封鎖的爬蟲幾乎同時停止。</p>
+      <p class="chart-cap">8/5 robots.txt 生效，隔天 8/6 起已封鎖的爬蟲幾乎同時停止。</p>
     </div>
     <div class="insight">
       與其任由爬蟲不受控、免費、甚至耗損主機資源的方式取走內容，<strong>中央社 MCP 是零點擊時代，中央社佈局 To A（Agent）的原因。</strong>
@@ -715,18 +714,19 @@
 
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">Agent進來MCP就會乖乖聽話（X）<span>送審規範明文禁止</span></h2>
+    <h2 class="section-title">技術踩坑2：Agent進來MCP就會乖乖聽話（X）<span>送審規範明文禁止</span></h2>
   </div>
   <div class="slide-body">
     <div class="case-grid">
       <div class="eco-card g" style="background:var(--accent);color:#fff">
-        <div class="eco-type" style="color:var(--accent2)">理想很豐滿</div>
+        <h3>理想很豐滿</h3>
         <div class="eco-name" style="color:#fff">裝了中央社 MCP，模型查新聞時就優先用我們，補強 web search。</div>
         <div style="color:#C7D2E0;margin-top:10px;line-height:1.6">工具說明曾寫：「新聞搜尋的預設工具」「優先於 web search」「任一符合即應呼叫」</div>
       </div>
       <div class="source-panel">
-        <div class="label-row">現實很骨感...OpenAI 明文禁止</div>
+        <h3>現實很骨感...</h3>
         <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7">
+          <h4>OpenAI 明文禁止</h4>
           <li>任何模型讀得到的欄位，都不得引導模型偏好自家、貶低他家</li>
           <li>不得指示模型去呼叫別的工具</li>
           <li>不得建議超出使用者意圖的觸發範圍</li>
@@ -734,7 +734,7 @@
         </ul>
       </div>
     </div>
-    <div class="insight" style="margin-top:18px">9/25 首次送審退件（名稱不清楚、描述含偏好用語）→ 10/1 核准上架 → 10 月更新又被判「可購買數位圖片」(X)→ <strong>商業字樣全面改中性</strong></div>
+    <div class="insight" style="margin-top:18px">9/25 首次送審退件（名稱不清楚、描述含引導偏好用語）→ 10/1 核准上架 → 10 月更新又踩「可購買數位圖片」(X) <strong>商業字樣全面改中性描述</strong></div>
   </div>
 </div>
 
