@@ -443,6 +443,21 @@
   .media-col .qr-panel h3 { font-family: var(--serif); font-size: 22px; font-weight: 700; margin-bottom: 16px; }
   .media-col .qr-panel img { width: 180px; height: 180px; border-radius: 10px; border: 1px solid var(--border); }
   @media (max-width: 760px) { .media-col { grid-template-columns: 1fr; } }
+
+  /* CHAT REPLAY (multilingual example) */
+  .chat-demo { margin-top: 22px; display: flex; flex-direction: column; gap: 14px; }
+  .chat-msg { border-radius: 12px; padding: 18px 22px; }
+  .chat-msg.user { background: var(--surface2); border: 1px solid var(--border); }
+  .chat-msg.ai { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); }
+  .chat-role { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .chat-text { font-size: 15.5px; line-height: 1.85; }
+  .chat-text p { margin-top: 10px; }
+  .chat-text p:first-child { margin-top: 0; }
+  .chat-text h4 { font-size: 15.5px; font-weight: 700; color: var(--accent2); margin-top: 16px; margin-bottom: 4px; }
+  .chat-sources { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .chat-sources ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .chat-sources li { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+  .chat-sources li b { color: var(--text); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -696,33 +711,40 @@
     <h2 class="section-title">讓外國朋友看見台灣：<span>用他的語言查中央社</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">點名 Focus Taiwan，Claude 就用對方的語言查中央社外文報導：颱風、旅遊、移工新聞都附原文連結。</p>
-    <div class="quote-rows">
-      <div class="quote-row">
-        <span class="qt"><b>日本語</b>　中央社 MCP でフォーカス台湾を検索して：最近、台湾旅行に関係するニュースは？記事のリンクも付けて</span>
+    <p class="lede">點名 Focus Taiwan，Claude 就用對方的語言查中央社外文報導，用日文提問、日文回答，附原文連結。</p>
+    <div class="chat-demo">
+      <div class="chat-msg user">
+        <div class="chat-role">提問（日本語）</div>
+        <div class="chat-text">中央社 MCP でフォーカス台湾を検索して：最近、台湾旅行に関係するニュースは？記事のリンクも付けて</div>
       </div>
-      <div class="quote-row">
-        <span class="qt"><b>English</b>　Search Focus Taiwan with CNA MCP: what has it reported about this week's typhoon? Will there be a typhoon day? Include links.</span>
+      <div class="chat-msg ai">
+        <div class="chat-role">Claude 回覆</div>
+        <div class="chat-text">
+          <p>フォーカス台湾（日本語版）で、ここ2週間ほど（10月8日以降）の台湾旅行・観光関連ニュースを検索しました。旅行者に役立ちそうな記事を中心に整理しています。</p>
+          <h4>新しいスポット・イベント</h4>
+          <p>台北の龍山寺の正面にある艋舺公園が改修を終え、10月17日に供用が始まりました。水面に龍山寺が映る開放的な空間に生まれ変わっています。新北市新店区の景勝地・碧潭風景区では、毎年恒例の屋外アート展示が始まりました。今年のテーマは「星の王子さま」で、全長19メートルの船に主人公が乗った作品が水面に浮かんでいます。南部・高雄市では10月24日と25日に、台湾風唐揚げ（鹹酥雞）をテーマにした屋台グルメの祭典が開かれます。嘉義県と雲林県の境には、日本統治時代の1909年に建設された糖業鉄道の「復興鉄橋」があり、その一部が人道橋に改修され、11月11日に供用を開始する予定です。</p>
+          <h4>日本での台湾観光PR</h4>
+          <p>台北市政府観光伝播局が東京で観光キャンペーンを開き、俳優の福士蒼汰さんが登場しました。今年のテーマは「台北では迷子もデートになる」で、福士さんが台北の路地や歴史地区を歩くPR映像も公開されています。また、東京・渋谷と鳥取県で、阿里山林業鉄路をテーマにした楽曲を映像に合わせて演奏するイベントも開かれました。</p>
+          <h4>旅行者向けの注意点</h4>
+          <p>屏東県の離島・小琉球で、米国人観光客2人が絶滅危惧種のウミガメに触れたとして、野生動物保育法違反の疑いで送検されました。交通部観光署は、合法登録されていない宿泊施設として約1600軒を管理対象にしていると公表、今年1～9月の過料総額は約7億円に上ります。屏東県東港では連休中の観光客に向けて、警察がバイクのヘルメット着用を呼びかけました。</p>
+        </div>
+        <div class="chat-sources">
+          <div class="label-row">資料來源（9）</div>
+          <ol>
+            <li><b>艋舺公園がリニューアル</b>　水面に「逆さ龍山寺」映る開放的な空間に・2026-10-19</li>
+            <li><b>碧潭風景区に「星の王子さま」</b>　全長19メートルのアート作品・2026-10-18</li>
+            <li><b>高雄で屋台グルメの祭典開催へ</b>　台湾風唐揚げがテーマ・2026-10-09</li>
+            <li><b>日本時代に建設した糖業鉄道の鉄橋が人道橋に</b>　来月11日に供用・2026-10-11</li>
+            <li><b>福士蒼汰、台北の観光PR</b>　「デート」テーマの特別映像公開・2026-10-08</li>
+            <li><b>映像と音楽で阿里山鉄道の魅力伝えるイベント</b>　東京と鳥取で開催・2026-10-13</li>
+            <li><b>米国人観光客2人、ウミガメに触れた疑いで送検</b>　野生動物保育法違反・2026-10-17</li>
+            <li><b>観光署、非合法な宿泊施設1600軒を把握</b>　今年1～9月の過料総額は7億円超に・2026-10-11</li>
+            <li><b>巨大なヘルメット姿の警察官登場</b>　連休の観光客に交通安全啓発・2026-10-10</li>
+          </ol>
+        </div>
       </div>
     </div>
-    <div class="eco-grid">
-      <div class="eco-card">
-        <div class="eco-type">01 提示詞</div>
-        <div class="eco-name">用對方的語言問</div>
-        <div class="eco-desc">英文、日文、印尼文都行，AI 會用同一種語言回答。</div>
-      </div>
-      <div class="eco-card g">
-        <div class="eco-type">02 提示詞重點</div>
-        <div class="eco-name">點名外文版</div>
-        <div class="eco-desc">建議點名 Focus Taiwan，AI 會比較主動查中央社外文報導。</div>
-      </div>
-      <div class="eco-card">
-        <div class="eco-type">03 AI 回覆</div>
-        <div class="eco-name">從台灣出發的報導</div>
-        <div class="eco-desc">中央社記者直接用外文寫，不是機器翻譯。</div>
-      </div>
-    </div>
-    <div class="insight-blue" style="margin-top:18px">看到查詢過程出現 <strong>Search CNA News</strong>，就代表資料來自中央社，不是網頁搜尋。</div>
+    <div class="insight-blue" style="margin-top:18px">同一次搜尋，<strong>用日文提問、日文回答</strong>，每一條新聞都附原文連結可核對。</div>
   </div>
 </div>
 
