@@ -459,17 +459,16 @@
   .chat-sources li { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
   .chat-sources li b { color: var(--text); font-weight: 600; }
 
-  /* SCROLL-SNAP SCREENSHOT STEPPER */
-  .shots-body { padding: 0 !important; max-width: none !important; scroll-snap-type: y mandatory; }
-  .shot-frame {
-    scroll-snap-align: start; scroll-snap-stop: always;
-    height: 100%; min-height: 100%; width: 100%;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px 0;
+  /* WIPE SCREENSHOT STEPPER (fixed position, wheel-driven) */
+  .shots-body { padding: 0 !important; max-width: none !important; overflow: hidden !important; display: flex; align-items: center; justify-content: center; }
+  .shot-stage { position: relative; width: min(900px, 90%); aspect-ratio: 1072 / 790; }
+  .shot-stage img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+    border-radius: 12px; box-shadow: 0 8px 28px rgba(20,26,34,.14); background: #fff;
+    will-change: clip-path;
   }
-  .shot-frame img { max-width: min(900px, 90%); max-height: 100%; border-radius: 12px; box-shadow: 0 8px 28px rgba(20,26,34,.14); }
-  .shot-hint {
-    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+  .shot-counter {
+    position: absolute; left: 50%; bottom: -36px; transform: translateX(-50%);
     font-size: 12.5px; color: var(--muted); z-index: 50;
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
@@ -726,12 +725,15 @@
     <h2 class="section-title">讓外國朋友看見台灣：<span>用他的語言查中央社</span></h2>
   </div>
   <div class="slide-body shots-body">
-    <div class="shot-frame"><img src="japanewse00001.png" alt="日文提問畫面 1/7"></div>
-    <div class="shot-frame"><img src="japanewse00002.png" alt="日文提問畫面 2/7"></div>
-    <div class="shot-frame"><img src="japanewse00003.png" alt="日文提問畫面 3/7"></div>
-    <div class="shot-frame"><img src="japanewse00004.png" alt="日文提問畫面 4/7"></div>
-    <div class="shot-frame"><img src="japanewse00005.png" alt="日文提問畫面 5/7"></div>
-    <div class="shot-frame"><img src="japanewse00006.png" alt="日文提問畫面 6/7"></div>
+    <div class="shot-stage">
+      <img src="japanewse00001.png" alt="日文提問畫面 1/7">
+      <img src="japanewse00002.png" alt="日文提問畫面 2/7">
+      <img src="japanewse00003.png" alt="日文提問畫面 3/7">
+      <img src="japanewse00004.png" alt="日文提問畫面 4/7">
+      <img src="japanewse00005.png" alt="日文提問畫面 5/7">
+      <img src="japanewse00006.png" alt="日文提問畫面 6/7">
+      <div class="shot-counter">1 / 6　滾動滑鼠切換下一張</div>
+    </div>
   </div>
 </div>
 
@@ -799,6 +801,43 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', drawTrend);
   else drawTrend();
+})();
+</script>
+
+<script>
+(function(){
+  const stage = document.querySelector('.shot-stage');
+  if (!stage) return;
+  const imgs = Array.from(stage.querySelectorAll('img'));
+  const counter = stage.querySelector('.shot-counter');
+  const body = stage.closest('.slide-body');
+  let cur = 0, zCounter = 10, locked = false;
+
+  imgs.forEach((img, i) => {
+    img.style.zIndex = i === 0 ? zCounter : 1;
+    img.style.clipPath = i === 0 ? 'inset(0 0 0% 0)' : 'inset(0 0 100% 0)';
+  });
+
+  function goTo(idx, dir) {
+    if (idx < 0 || idx >= imgs.length || idx === cur || locked) return;
+    locked = true;
+    const target = imgs[idx];
+    zCounter++;
+    target.style.zIndex = zCounter;
+    target.style.transition = 'none';
+    target.style.clipPath = dir > 0 ? 'inset(0 0 100% 0)' : 'inset(100% 0 0 0)';
+    void target.offsetWidth;
+    target.style.transition = 'clip-path .55s cubic-bezier(.65,0,.35,1)';
+    requestAnimationFrame(() => { target.style.clipPath = 'inset(0 0 0% 0)'; });
+    if (counter) counter.textContent = `${idx + 1} / ${imgs.length}　滾動滑鼠切換下一張`;
+    setTimeout(() => { locked = false; cur = idx; }, 580);
+  }
+
+  body.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (locked || Math.abs(e.deltaY) < 8) return;
+    if (e.deltaY > 0) goTo(cur + 1, 1); else goTo(cur - 1, -1);
+  }, { passive: false });
 })();
 </script>
 
