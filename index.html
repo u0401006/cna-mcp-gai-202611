@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Agent就像你那說要去圖書館K書、卻在車站彈琴的兒子：中央社MCP想解決什麼？</title>
+<title>AI 成為資訊入口之後：中央社 MCP、可溯源的庫，與台灣的記憶</title>
 <style>
   :root {
     --bg: #EEF0F3;
@@ -87,16 +87,15 @@
     font-size: clamp(40px, 7vw, 80px); font-weight: 700; line-height: 1.18;
     letter-spacing: -.01em;
   }
-  .cover-title-pair { font-size: clamp(12px, 4.4vw, 56px); line-height: 1.45; color: #000; }
-  .cover-title-pair > span { display: block; white-space: nowrap; }
-  .cover-title-pair > span + span { margin-top: 8px; }
+  .cover-title-pair { font-size: clamp(18px, 4.4vw, 46px); line-height: 1.35; color: #000; }
+  .cover-title-pair > span { display: block; }
   .cover-title em { color: var(--accent); font-style: normal; }
   .cover-sub {
-    font-size: clamp(16px, 1.9vw, 19px); color: var(--muted); max-width: 620px; line-height: 1.75;
+    font-size: clamp(16px, 1.9vw, 19px); color: var(--muted); max-width: 720px; line-height: 1.75;
   }
   .cover-meta {
     font-size: 14px; color: var(--muted); border-top: 1px solid var(--border);
-    padding-top: 18px; width: 100%; max-width: 620px; text-align: center;
+    padding-top: 18px; width: 100%; max-width: 720px; text-align: center;
   }
   .cover-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; justify-content: center; }
   .tag {
@@ -212,6 +211,7 @@
     background: var(--surface); border-radius: 0 10px 10px 0;
   }
   .big-q em { color: var(--accent); font-style: normal; }
+  .big-q .en { font-size: 0.9em; color: var(--muted); display: block; margin-top: 12px; font-weight: 400; font-style: italic; }
 
   .divider { height: 1px; background: var(--border); margin: 18px 0; }
   .label-row { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; margin-bottom: 8px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
@@ -472,95 +472,260 @@
     font-size: 12.5px; color: var(--muted); z-index: 50;
     font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
+
+  /* Bullet list styling */
+  ul.bullet-list { 
+    padding-left: 20px; 
+    margin-top: 12px; 
+    color: var(--muted); 
+    line-height: 1.75; 
+  }
+  ul.bullet-list li { 
+    margin: 8px 0; 
+    font-size: 15.5px; 
+  }
+  ul.bullet-list strong { 
+    color: var(--text); 
+  }
 </style>
 </head>
 <body>
 
 <div id="progress"></div>
-<span id="badge">1 / 35</span>
+<span id="badge">1 / 27</span>
 
 <div id="deck">
 
+<!-- P1: COVER SLIDE -->
 <div class="slide cover active">
   <div class="slide-body">
-    <div class="cover-eyebrow">中央社MCP</div>
-    <div class="cover-title cover-title-pair"><span>Agent就像你那說要去<em>圖書館K書</em>、</span><span>卻在<em>車站彈琴</em>的兒子</span><span><em>中央社MCP</em>想解決什麼？</span></div>
+    <div class="cover-eyebrow">CoLISP 2026 專題演講</div>
+    <div class="cover-title cover-title-pair">
+      <span>AI 成為資訊入口之後：</span>
+      <span><em>中央社 MCP</em>、可溯源的庫，與<em>台灣的記憶</em></span>
+    </div>
     <div class="cover-sub">
-      從傳播中介的轉變，談新聞來源、編輯責任與信任；當 AI 協助整理資訊，媒體如何把更多資源投入現場、追問與查證。
+      去圖書館 K 書、卻在車站彈琴的兒子——當 AI 成為中介，誰提供來源、誰保存脈絡？
     </div>
     <div class="cover-meta">
-      宋卡波 · 2026/11/11
+      宋育泰 · 中央社資訊暨創新中心主任 · 2026/12/12 · 國家圖書館
       <div class="cover-tags">
         <span class="tag">AI Agent</span>
         <span class="tag">AI 中介</span>
         <span class="tag">中央社 MCP</span>
-        <span class="tag">新聞信任</span>
+        <span class="tag">新聞溯源</span>
+        <span class="tag">記憶保存</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SLIDE: LLM語料訓練 -->
+<!-- P2: Why News Agency Appears at Library Conference -->
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">契機1：中央社，支持<span>台灣主權LLM</span>好不好</h2>
+    <h2 class="section-title">為什麼<span>新聞社會出現在圖資年會</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">好啦，哪次不支持。中央社有什麼？</p>
+    <p class="lede">AI 對媒體和對圖書館的衝擊相當雷同。</p>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-type">共同點 1</div>
+        <div class="eco-name">提供可信來源</div>
+        <div class="eco-desc">新聞社與圖書館都在為讀者提供經過查證、可信賴的資訊來源。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">共同點 2</div>
+        <div class="eco-name">選擇與編排</div>
+        <div class="eco-desc">編輯／編目：新聞社的編輯選擇與圖書館的分類編目，都是一種對資訊的詮釋與組織。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">共同點 3</div>
+        <div class="eco-name">保存紀錄</div>
+        <div class="eco-desc">媒體與圖書館都肩負保存歷史紀錄的職責，讓後人能檢驗與重新理解。</div>
+      </div>
+    </div>
+    <div class="insight">
+      當 AI 開始介入資訊選擇、重組與呈現，<strong>新聞社與圖書館面對的是同一個課題</strong>。
+    </div>
+  </div>
+</div>
+
+<!-- P3: AI Adoption Faster Than Smartphones -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">路透新聞學研究所 2026</span>
+    <h2 class="section-title">AI 普及得<span>比手機還快</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">至少在美國，生成式 AI 的普及速度比當年智慧型手機與網際網路更快。</p>
     <div class="stat-grid">
       <div class="stat-card accent">
-        <div class="stat-num gold">478萬+</div>
-        <div class="stat-sub">1990 – 2026</div>
-        <div class="stat-label">歷史新聞資料庫</div>
-        <div class="stat-desc">中央社 1990 年至今累積的新聞稿件，涵蓋外交、財經、政治、社會、兩岸、國際與生活全領域。</div>
+        <div class="stat-num gold">51%</div>
+        <div class="stat-sub">有歷年資料的 6 國</div>
+        <div class="stat-label">每週使用生成式 AI</div>
+        <div class="stat-desc">2025 年為 34%；美國 49%。</div>
       </div>
       <div class="stat-card accent2">
-        <div class="stat-num blue">4.3萬+</div>
-        <div class="stat-sub">2000 – 2026</div>
-        <div class="stat-label">世界年鑑資料庫</div>
-        <div class="stat-desc">中央社每年編纂的台灣與國際大事彙整。</div>
+        <div class="stat-num blue">7% → 16% → 28%</div>
+        <div class="stat-sub">2024 → 2025 → 2026</div>
+        <div class="stat-label">每日使用</div>
+        <div class="stat-desc">6 國平均，三年間成長四倍。</div>
+      </div>
+    </div>
+    <div class="source">來源：Reuters Institute for the Study of Journalism，《Generative AI and News Report 2026》，Felix M. Simon、Rasmus Kleis Nielsen、Richard Fletcher，YouGov 調查 9 國（阿根廷、澳洲、丹麥、芬蘭、法國、日本、挪威、英國、美國），每國約 2,000 人，2026/8/14–9/28</div>
+  </div>
+</div>
+
+<!-- P4: AI as Information Gateway -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">路透新聞學研究所 2026</span>
+    <h2 class="section-title">AI 變成<span>查資訊的入口</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">用 AI 查資訊：11%（2024）→ 24%（2025）→ 38%（2026），6 國。</p>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">24%</div>
+        <div class="stat-label">研究主題</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">350萬+</div>
-        <div class="stat-sub">1924 – 2026</div>
-        <div class="stat-label">影像空間資料庫</div>
-        <div class="stat-desc">中央社創立至今累積的新聞攝影檔案，附metadata。</div>
+        <div class="stat-num">20%</div>
+        <div class="stat-label">問建議</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-num">18%</div>
+        <div class="stat-label">問事實</div>
+      </div>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-name">很多人是無意間碰到 AI</div>
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7">
+          <li>57% 一週內在 Google、Bing 看過 AI 摘要（9 國）</li>
+          <li>24% 看過新聞註明 AI 製作的標示</li>
+          <li>20% 看過 AI 條列式新聞摘要</li>
+        </ul>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">AI agent 還沒普及</div>
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7">
+          <li>67% 過去一週沒用過</li>
+          <li>14% 拿來做真正的事</li>
+          <li><strong>13% 只是試用</strong>（嘗試看看的心態）</li>
+        </ul>
+      </div>
+    </div>
+    <div class="source">來源：同上報告；Nieman Lab 摘要文〈AI is becoming an information gateway〉（2026-11-10）</div>
+  </div>
+</div>
+
+<!-- P5: Convenience Not Trust -->
+<div class="slide">
+  <div class="slide-header">
+    <span class="section-num">路透新聞學研究所 2026</span>
+    <h2 class="section-title">用 AI 是因為<span>省事，不是因為信任</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">64%</div>
+        <div class="stat-label">更快更方便</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">56%</div>
+        <div class="stat-label">能用自然語言對話</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">21%</div>
+        <div class="stat-label">認為 AI 資訊比其他來源可靠</div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:24px"><strong>但真的在用的人很信任</strong>：問事實 75%、問建議 76%、看新聞 72%（9 國）。</p>
+    <div class="eco-grid">
+      <div class="eco-card g">
+        <div class="eco-name">用 AI 看新聞仍小眾但成長</div>
+        <div class="eco-desc">3%（2024）→ 6%（2025）→ 9%（2026），6 國（9 國為 8%）。</div>
+      </div>
+      <div class="eco-card r">
+        <div class="eco-name">Rasmus Kleis Nielsen 補充</div>
+        <div class="eco-desc">報告共同作者在 LinkedIn 上指出：用 AI 查資訊的人自述，新聞網站和搜尋引擎都用得比較少，搜尋減少得更多（屬受訪者自述）。</div>
+      </div>
+    </div>
+    <div class="insight">
+      「省事而非信任」與參考服務、資訊素養教育直接相關。<strong>圖書館與新聞社都要回答：如何在方便與可信之間取得平衡？</strong>
     </div>
   </div>
 </div>
 
+<!-- P6: People Don't Want AI to Make News -->
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">契機2：零點擊的時代，<span>攤開中央社數據</span></h2>
+    <span class="section-num">路透新聞學研究所 2026</span>
+    <h2 class="section-title">大家<span>不想讓 AI 做新聞</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">零點擊不是國外的專利啊。我們也有</p>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">12%</div>
+        <div class="stat-label">能接受完全由 AI 製作的新聞</div>
+        <div class="stat-desc">9 國平均</div>
+      </div>
+      <div class="stat-card accent">
+        <div class="stat-num gold">19%</div>
+        <div class="stat-label">有部分人工監督</div>
+        <div class="stat-desc">接受度提高，但仍不到兩成</div>
+      </div>
+    </div>
+    <ul class="bullet-list">
+      <li>2024 年以來幾乎沒變，每個國家都有人機落差</li>
+      <li>即時新聞與報導都一樣；評論／意見最難被接受</li>
+    </ul>
+    <div class="big-q" style="margin-top:28px">
+      民眾用 AI「找」資訊，卻不要 AI「做」新聞——<em>可信來源的角色反而更重要</em>。
+    </div>
+    <div class="insight">
+      這是轉場到中央社 MCP 的關鍵：<strong>當 AI 成為中介，誰來保證來源的可信度與可溯源性？</strong>
+    </div>
+  </div>
+</div>
+
+<!-- P7: Zero-Click CNA Data (Updated 11/1-11/7) -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">零點擊的時代，<span>攤開中央社數據</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">2026/11/1–11/7 一週，全站請求 3,766 萬次</p>
     <div class="stat-grid">
       <div class="stat-card accent">
-        <div class="stat-num gold">20%</div>
-        <div class="stat-label">真人</div>
-      </div>
-      <div class="stat-card accent2">
-        <div class="stat-num blue">40%</div>
+        <div class="stat-num gold">約 60%</div>
+        <div class="stat-sub">約 2,255 萬次</div>
         <div class="stat-label">看起來像真人</div>
-        <div class="stat-desc">可能有真人、也有自動化機制開啟網頁。</div>
+        <div class="stat-desc">只過基本瀏覽器特徵判讀</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">11%</div>
+        <div class="stat-sub">約 412 萬次</div>
+        <div class="stat-label">AI bot</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">40%</div>
-        <div class="stat-label">爬蟲大軍</div>
-        <div class="stat-desc">含 AI 訓練、AI 搜尋、搜尋索引、分享預覽等服務。</div>
+        <div class="stat-num">29%</div>
+        <div class="stat-sub">約 1,100 萬次</div>
+        <div class="stat-label">其他 bot</div>
       </div>
     </div>
+    <div class="source">來源：GCP Load Balancer 請求紀錄 2026/11/1–11/7</div>
   </div>
 </div>
 
+<!-- P8: robots.txt Chart -->
 <div class="slide">
   <div class="slide-header">
     <h2 class="section-title">主機熱熱鬧鬧，<span>封不封都煩惱</span></h2>
   </div>
   <div class="slide-body">
-    <p class="lede">不封的話，下個月GCP的帳單就會變胖...封錯了<strong>GEMINI的爬蟲就不來了？！</strong></p>
+    <p class="lede">不封的話，下個月 GCP 的帳單就會變胖...封錯了 <strong>GEMINI 的爬蟲就不來了？！</strong></p>
     <div class="chart-card">
       <div class="chart-legend">
         <span><i style="border-color:var(--accent)"></i>已封鎖的 AI 訓練爬蟲</span>
@@ -570,12 +735,66 @@
       <div class="chart-wrap"><canvas id="chTrend"></canvas></div>
       <p class="chart-cap">8/5 robots.txt 生效，隔天 8/6 起已封鎖的爬蟲幾乎同時停止。</p>
     </div>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-name">封鎖前後對照</div>
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7;font-size:14px">
+          <li>GPTBot 每日 19,270 → 15</li>
+          <li>ClaudeBot 36,366 → 701</li>
+          <li>Claude-SearchBot 148 → 45,139（<strong>305 倍</strong>）</li>
+          <li>ChatGPT-User 93,584 → 134,218（<strong>+43%</strong>）</li>
+        </ul>
+      </div>
+    </div>
     <div class="insight">
       與其任由爬蟲不受控、免費、甚至耗損主機資源的方式取走內容，<strong>中央社 MCP 是零點擊時代，中央社佈局 To A（Agent）的原因。</strong>
     </div>
   </div>
 </div>
 
+<!-- P9: TollBit Data - Scrapers Came, Readers Didn't -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">爬蟲來了，<span>讀者沒來</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">10/8 起以 TollBit 監測。2026/11/1–11/7 一週：</p>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">412 萬次</div>
+        <div class="stat-label">AI bot 抓取</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">482 位</div>
+        <div class="stat-label">只帶回讀者</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4,307 : 1</div>
+        <div class="stat-label">每 4,307 次抓取換 1 次造訪</div>
+      </div>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-type">平台表現</div>
+        <div class="eco-name">各平台抓取次數／帶回讀者</div>
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7;font-size:13.5px">
+          <li>Exa：801,800／0</li>
+          <li>Meta：706,700／32</li>
+          <li>OpenAI：526,100／84</li>
+          <li><strong>Perplexity：459,700／315（1,459:1，最佳）</strong></li>
+          <li>Anthropic：387,500／48</li>
+        </ul>
+      </div>
+      <div class="eco-card r">
+        <div class="eco-name">外部對照：Pew 2025</div>
+        <div class="eco-desc">出現 AI 摘要時只有 8% 造訪點傳統連結，沒摘要時 15%。</div>
+      </div>
+    </div>
+    <div class="source">來源：TollBit 儀表板 2026/11/1–11/7；Pew 2025-07-22</div>
+  </div>
+</div>
+
+<!-- P10: Flow Diagrams with Agent -->
 <div class="slide">
   <div class="slide-header"><h2 class="section-title">新聞傳遞流程，多了<span>AGENT</span></h2></div>
   <div class="slide-body">
@@ -588,10 +807,103 @@
       <div class="label-row">現在 AI Agent 介入</div>
       <div class="comm-scroll"><div class="comm-flow"><div class="comm-node ">事件／來源</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">記者採訪</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node media">編輯選擇與詮釋</div><span class="comm-arrow" aria-hidden="true">＋</span><div class="comm-node ">參考資料</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ai">AI 選擇與重組</div><span class="comm-arrow" aria-hidden="true">→</span><div class="comm-node ">閱聽人</div></div></div>
     </div>
-</div>
+    <p class="lede" style="margin-top:24px"><strong>圖書館的流程也一樣</strong>：館藏 → 編目 → 參考服務 → 讀者；現在 AI 插在讀者前面。</p>
+  </div>
 </div>
 
-<!-- SLIDE: 來看看可以找到什麼 -->
+<!-- P11: Who Decides What You See? -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title"><span>誰決定你看見什麼？</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-type">追問 1</div>
+        <div class="eco-name">守門 (Gatekeeping)</div>
+        <div class="eco-desc">過去由編輯與館員負責，現在 AI 也在選擇哪些資訊被看見、哪些被忽略。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">追問 2</div>
+        <div class="eco-name">框架 (Framing)</div>
+        <div class="eco-desc">AI 如何重組資訊、用什麼順序與語氣呈現，決定了讀者理解的角度。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">追問 3</div>
+        <div class="eco-name">回饋 (Feedback)</div>
+        <div class="eco-desc">AI 的選擇是否會強化既有偏見、形成資訊同溫層？</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">追問 4</div>
+        <div class="eco-name">可信度 (Credibility)</div>
+        <div class="eco-desc">當 AI 成為中介，誰來保證來源的可信度與可溯源性？</div>
+      </div>
+    </div>
+    <div class="insight">
+      對圖資聽眾來說，<strong>館藏發展與分類也是選擇</strong>——這些追問同樣適用於圖書館。
+    </div>
+  </div>
+</div>
+
+<!-- P12: Three-Layer Cake -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">三層蛋糕：<span>新聞業做的是 claim，不是真相</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">Tow-Knight Center《The Three-Layer Cake》（Gina Chua、Adiel Kaplan，2026-10）：消費層、綜合層、創作層；<strong>槓桿最大在綜合層</strong>。</p>
+    <div class="big-q">
+      "We are more accurately in the claim business."
+      <span class="en">我們更準確地說是在經營陳述（claim），而非真相本身。</span>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card g">
+        <div class="eco-name">報告點名的合作對象</div>
+        <div class="eco-desc">包含「科學出版、檔案館、<strong>圖書館</strong>」——這是邀請圖資界的最佳證據。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">對新聞社與圖書館的啟示</div>
+        <div class="eco-desc">我們的價值不在保證每一則都是絕對真相，而在<strong>記錄誰說了什麼、留下脈絡與出處，讓後人能檢驗</strong>。</div>
+      </div>
+    </div>
+    <div class="source">來源：Tow-Knight Center《The Three-Layer Cake》，CC BY 4.0</div>
+  </div>
+</div>
+
+<!-- P13: What CNA Has (moved from S2) -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">中央社有什麼？<span>支持台灣主權 LLM</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">好啦，哪次不支持。回應 CoLISP 2025 李育杰講 TAIDE 主權 AI 的延續。</p>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-num gold">478 萬+</div>
+        <div class="stat-sub">1990 – 2026</div>
+        <div class="stat-label">歷史新聞資料庫</div>
+        <div class="stat-desc">中央社 1990 年至今累積的新聞稿件，涵蓋外交、財經、政治、社會、兩岸、國際與生活全領域。</div>
+      </div>
+      <div class="stat-card accent2">
+        <div class="stat-num blue">4.3 萬+</div>
+        <div class="stat-sub">2000 – 2026</div>
+        <div class="stat-label">世界年鑑資料庫</div>
+        <div class="stat-desc">篇 → 章 → 文三層結構，每年編纂的台灣與國際大事彙整。</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">350 萬+</div>
+        <div class="stat-sub">1924 – 2026</div>
+        <div class="stat-label">影像空間資料庫</div>
+        <div class="stat-desc">中央社創立至今累積的新聞攝影檔案，<strong>持續歸檔無中斷</strong>；附攝影記者署名、地點、人物、新聞專題標籤等 metadata。</div>
+      </div>
+    </div>
+    <div class="insight">
+      文字資料庫從 1990 年起；1990 年前的文字稿<strong>正在回溯補建中</strong>，影像從 1924 年持續歸檔至今。這些 metadata 與結構，正是圖資聽眾最在意的。
+    </div>
+  </div>
+</div>
+
+<!-- P14: Multilingual Example (S6 unchanged) -->
 <div class="slide">
   <div class="slide-header">
     <span class="section-num">CNA MCP實例</span>
@@ -610,7 +922,8 @@
     </div>
   </div>
 </div>
-  
+
+<!-- P15: Evaluation Results (Updated to 81.0% with note) -->
 <div class="slide eval-results">
   <div class="slide-header"><h2 class="section-title">掛了 CNA MCP 差別在哪？</h2></div>
   <div class="slide-body">
@@ -622,66 +935,92 @@
           <div class="eval-bar-row eval-highlight"><span class="eval-bar-label">模型＋MCP</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:81%"></div></div><span class="eval-bar-value">81.0%</span></div><div class="eval-bar-row"><span class="eval-bar-label">模型＋網路搜尋</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:76%"></div></div><span class="eval-bar-value">76.0%</span></div><div class="eval-bar-row"><span class="eval-bar-label">純模型</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:40.6%"></div></div><span class="eval-bar-value">40.6%</span></div>
           <div class="eval-axis"><span>0</span><span>50</span><span>100%</span></div>
         </div>
-        <p class="eval-note">純模型正確率不足五成；三種條件中以 <strong>MCP 正確率最高</strong>，較網路搜尋高 5 個百分點。</p>
+        <p class="eval-note">純模型正確率不足五成；三種條件中以 <strong>MCP 正確率最高</strong>，較網路搜尋高 5 個百分點。<br><br><strong>註：81.0% 為加入法規工具前的版本</strong>；加入法規工具後正確率降至 77.6%（見後續投影片）。</p>
       </div>
       <div class="eval-card">
-        <h3>Agents都去哪裡找資料？</h3>
-        <p class="eval-meta">2026 年 7 月・新聞 50 題・gpt-5.6-luna</p>
-        <h4 class="eval-sites-title">網路搜尋最常引用的 10 個網站<span>（引用次數；共 1,790 次、388 個網站）</span></h4>
-        <div class="eval-sites">
-          <div class="eval-bar-row"><span class="eval-bar-label">reddit.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:92.80000000000001%"></div></div><span class="eval-bar-value">232</span></div><div class="eval-bar-row eval-highlight"><span class="eval-bar-label">cna.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:83.2%"></div></div><span class="eval-bar-value">208</span></div><div class="eval-bar-row"><span class="eval-bar-label">zh.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:51.2%"></div></div><span class="eval-bar-value">128</span></div><div class="eval-bar-row"><span class="eval-bar-label">youtube.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:36.8%"></div></div><span class="eval-bar-value">92</span></div><div class="eval-bar-row"><span class="eval-bar-label">fda.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:34%"></div></div><span class="eval-bar-value">85</span></div><div class="eval-bar-row"><span class="eval-bar-label">en.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:18.4%"></div></div><span class="eval-bar-value">46</span></div><div class="eval-bar-row"><span class="eval-bar-label">twse.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:17.2%"></div></div><span class="eval-bar-value">43</span></div><div class="eval-bar-row"><span class="eval-bar-label">gov.uk</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:13.200000000000001%"></div></div><span class="eval-bar-value">33</span></div><div class="eval-bar-row"><span class="eval-bar-label">hualien.forest.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:11.200000000000001%"></div></div><span class="eval-bar-value">28</span></div><div class="eval-bar-row"><span class="eval-bar-label">forest.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:10.8%"></div></div><span class="eval-bar-value">27</span></div>
-          <div class="eval-axis"><span>0</span><span>125</span><span>250 次</span></div>
+        <h3>評測設計</h3>
+        <ul style="padding-left:20px;margin-top:12px;color:var(--muted);line-height:1.75">
+          <li><strong>人</strong>：謝長廷的副手是誰？</li>
+          <li><strong>事</strong>：哪一年發生美麗島事件？</li>
+          <li><strong>時</strong>：某法案何時三讀？</li>
+          <li><strong>地</strong>：蘇迪勒颱風哪裡災情最重？</li>
+          <li><strong>物</strong>：某政策涉及哪些單位？</li>
+        </ul>
+        <div class="insight" style="margin-top:16px">
+          題目涵蓋台灣政治、社會、颱風、法案等各領域，測試 MCP 在<strong>台灣在地知識</strong>的表現。
         </div>
-        <p class="eval-note">沒掛CNA MCP，網路搜尋<strong>最常引用的網站是 reddit，次數高於中央社</strong>；模型 + MCP 的回答則來自中央社資料庫，以新聞報導為主，並輔以政府公開資料與法規。</p>
       </div>
     </div>
   </div>
 </div>
 
+<!-- P16: Reddit More Than CNA (S7 lower + S8) -->
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">中國試射彈道飛彈：<span>reddit</span>多於中央社</h2>
+    <h2 class="section-title">Agents 都去哪找資料？<span>reddit 多於中央社</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">2026 年 7 月新聞 50 題・gpt-5.6-luna・網路搜尋引用 1,790 次、388 個網站</p>
+    <div class="eval-grid">
+      <div class="eval-card">
+        <h4 class="eval-sites-title">網路搜尋最常引用的 10 個網站<span>（引用次數）</span></h4>
+        <div class="eval-sites">
+          <div class="eval-bar-row"><span class="eval-bar-label">reddit.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:92.80000000000001%"></div></div><span class="eval-bar-value">232</span></div><div class="eval-bar-row eval-highlight"><span class="eval-bar-label">cna.com.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:83.2%"></div></div><span class="eval-bar-value">208</span></div><div class="eval-bar-row"><span class="eval-bar-label">zh.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:51.2%"></div></div><span class="eval-bar-value">128</span></div><div class="eval-bar-row"><span class="eval-bar-label">youtube.com</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:36.8%"></div></div><span class="eval-bar-value">92</span></div><div class="eval-bar-row"><span class="eval-bar-label">fda.gov.tw</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:34%"></div></div><span class="eval-bar-value">85</span></div><div class="eval-bar-row"><span class="eval-bar-label">en.wikipedia.org</span><div class="eval-bar-track"><div class="eval-bar-fill" style="width:18.4%"></div></div><span class="eval-bar-value">46</span></div>
+          <div class="eval-axis"><span>0</span><span>125</span><span>250 次</span></div>
+        </div>
+      </div>
+      <div class="eval-card">
+        <h3>最終引用的才算數</h3>
+        <p style="margin-top:12px;line-height:1.75">62 次最終引用中，<strong>中央社 26 次（41.9%）最多</strong>；reddit、維基百科、YouTube 占檢索來源 28.0%，但最終回答都沒引用。</p>
+        <div class="divider"></div>
+        <h3>即時新聞前期測試</h3>
+        <p style="margin-top:12px;line-height:1.75">網路搜尋 96%、MCP 94%，兩者接近；<strong>重點是來源而非正確率</strong>。</p>
+      </div>
+    </div>
+    <div class="insight">
+      沒掛 CNA MCP，網路搜尋最常引用的網站是 reddit，次數高於中央社；<strong>模型 + MCP 的回答則來自中央社資料庫，以新聞報導為主，並輔以政府公開資料與法規</strong>。
+    </div>
+  </div>
+</div>
+
+<!-- P17: Case Study - MH-140 -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">案例二 MH-140：<span>引用的報導發出時比賽還沒打完</span></h2>
   </div>
   <div class="slide-body">
     <div class="case-grid">
       <div>
         <div class="label-row">題目</div>
-        <div class="case-q">2026 年 7 月 6 日中國解放軍海軍戰略核潛艦向太平洋公海試射潛射彈道飛彈。從中國國防部通知日本駐北京大使館將進行發射，到中國官媒公布的實際發射時刻，相隔多久？</div>
-        <div class="case-answer"><strong>正解：1 小時 31 分鐘</strong></div>
+        <div class="case-q">2026 年第 22 屆 U-12 世界盃棒球賽，中華隊 5 場比賽分別對哪些國家？比數各是多少？</div>
+        <div class="case-answer"><strong>AI 給了答案，但讀者照著引用去查，只能驗證 5 場中的 2 場。</strong></div>
         <div class="step-list">
           <div class="step-item">
             <div class="step-num">1</div>
-            <div><div class="step-title">搜尋 3 次</div><div class="step-desc">關鍵字含中國國防部、日本駐北京大使館、潛射彈道飛彈</div></div>
+            <div><div class="step-title">AI 引用了中央社報導</div><div class="step-desc">看起來有根有據</div></div>
           </div>
           <div class="step-item">
             <div class="step-num">2</div>
-            <div><div class="step-title">檢索 18 個來源</div><div class="step-desc">其中 reddit 5 個、中央社 3 個</div></div>
+            <div><div class="step-title">但那篇報導發出時</div><div class="step-desc">比賽還沒全部打完，只涵蓋前 2 場</div></div>
           </div>
           <div class="step-item">
             <div class="step-num">3</div>
-            <div><div class="step-title">回答「1 小時 31 分鐘」<span class="pill-correct">正確</span></div><div class="step-desc">最終引用：中央社 1 篇（只涵蓋部分答案）</div></div>
+            <div><div class="step-title">AI 補了後 3 場</div><div class="step-desc">來源不明，讀者無法驗證</div></div>
           </div>
         </div>
       </div>
       <div class="source-panel">
-        <div class="label-row">檢索來源（共 18 個）</div>
-        <div class="source-bar-row gold"><span class="source-bar-label">reddit</span><div class="source-bar-track"><div class="source-bar-fill" style="width:100%"></div></div><span class="source-bar-value">5</span></div>
-        <div class="source-bar-row blue"><span class="source-bar-label">中央社</span><div class="source-bar-track"><div class="source-bar-fill" style="width:60%"></div></div><span class="source-bar-value">3</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">中國國防部</span><div class="source-bar-track"><div class="source-bar-fill" style="width:60%"></div></div><span class="source-bar-value">3</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">YouTube</span><div class="source-bar-track"><div class="source-bar-fill" style="width:40%"></div></div><span class="source-bar-value">2</span></div>
-        <div class="source-bar-row"><span class="source-bar-label">其他</span><div class="source-bar-track"><div class="source-bar-fill" style="width:100%"></div></div><span class="source-bar-value">5</span></div>
-        <div class="label-row" style="margin-top:18px">檢索到的 reddit 貼文（節錄）</div>
-        <div class="source-quotes quote-rows">
-          <div class="quote-row"><span class="qt"><b>r/China_irl</b>　看鉴中国：中国核潜艇试射导弹周边国家反应强烈，是过度解读还是透明度不足</span></div>
-          <div class="quote-row"><span class="qt"><b>r/LiberalGooseGroup</b>　中国在太平洋试射潜射弹道导弹激怒邻国</span></div>
-          <div class="quote-row"><span class="qt"><b>r/InsightBridge</b>　BBC：中国试射导弹 美国质疑暗扩核武库 澳洲斥挑衅</span></div>
-          <div class="quote-row"><span class="qt"><b>r/Taiwanese</b>　中國核潛艦試射刻意未先知會華府傳遞新訊號 北約秘書長怒轟</span></div>
-        </div>
+        <div class="eco-name">這是「引用存在但不支持結論」的好例子</div>
+        <div class="eco-desc" style="margin-top:12px">對圖資的引用分析很有感：不是有引用就代表可信，還要檢查引用是否真的支持結論。</div>
+        <div class="divider"></div>
+        <div class="eco-name">對新聞社的啟示</div>
+        <div class="eco-desc" style="margin-top:12px">即時新聞會持續更新，但 AI 抓到的可能是舊版；如何讓 AI 取用時也拿到更正與更新，是未完成的工作。</div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- P18: Tool Routing Issue (S9) -->
 <div class="slide">
   <div class="slide-header">
     <h2 class="section-title">技術踩坑1：工具越多搜尋品質越好（X）<span>模型越容易選錯（O）</span></h2>
@@ -708,13 +1047,14 @@
         </ul>
       </div>
     </div>
-    <div class="insight-blue" style="margin-top:18px">中央社新聞什麼主題都有，<strong>路由很難切乾淨</strong>。還有多細緻化的作法減少發生 zero hit 的況。</div>
+    <div class="insight-blue" style="margin-top:18px">中央社新聞什麼主題都有，<strong>路由很難切乾淨</strong>。圖資連結：這就是分類與路由（routing）問題，跟館藏分類「一個主題要放哪」一樣難切。</div>
   </div>
 </div>
 
+<!-- P19: Platform Review Regulations (S10) -->
 <div class="slide">
   <div class="slide-header">
-    <h2 class="section-title">技術踩坑2：Agent進來MCP就會乖乖聽話（X）<span>送審規範明文禁止</span></h2>
+    <h2 class="section-title">技術踩坑2：<span>送審規範明文禁止引導偏好</span></h2>
   </div>
   <div class="slide-body">
     <div class="case-grid">
@@ -738,6 +1078,250 @@
   </div>
 </div>
 
+<!-- P20: SPIEGEL Example -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">SPIEGEL 的例子：<span>工具定義是編輯選擇</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">Der Spiegel 把納粹黨員名冊接進 ChatGPT／Claude，讓人查家族歷史。</p>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-type">四個工具</div>
+        <div class="eco-name">搜尋、取得紀錄、背景說明、連線檢查</div>
+        <div class="eco-desc">每個工具的命名、描述、回傳內容，都在決定 AI 如何理解這份資料。</div>
+      </div>
+      <div class="eco-card g">
+        <div class="eco-name">Florent Daudens 的觀察</div>
+        <div class="big-q" style="margin:0;padding:12px;font-size:18px">
+          "These tool definitions are editorial choices too."
+          <span class="en" style="font-size:14px;margin-top:8px">這些工具的定義，本身也是編輯選擇。</span>
+        </div>
+      </div>
+    </div>
+    <div class="insight">
+      這張是銜接到「庫與記憶」的橋：<strong>德國用 MCP 開放一段艱難的歷史紀錄</strong>——開放艱難的歷史，本身就是一種負責。
+    </div>
+  </div>
+</div>
+
+<!-- P21: Introduce Florent Daudens -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">啟發我們的人：<span>Florent Daudens</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">他在 2026-11-03 文章中把中央社列為第一個例子。</p>
+    <div class="eco-grid">
+      <div class="eco-card accent">
+        <div class="eco-type">他的描述</div>
+        <div class="eco-name">中央社 MCP</div>
+        <ul style="padding-left:20px;margin-top:8px;color:var(--muted);line-height:1.7">
+          <li>近 500 萬則新聞（<strong>478 萬+</strong>）</li>
+          <li>照片庫（<strong>350 萬+</strong>）</li>
+          <li>世界年鑑（<strong>4.3 萬+</strong>）</li>
+          <li>政府公開資料</li>
+          <li>月費 NT$200（約 US$6）</li>
+        </ul>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">他問了什麼</div>
+        <div class="eco-name">連接器不是商業模式</div>
+        <div class="eco-desc">接上不等於有價值；通訊社的資訊要有用到什麼程度，才值得成為你 AI 工作流程裡的一筆訂閱？</div>
+      </div>
+    </div>
+    <div class="source">來源：Florent Daudens，〈Would you pay to plug a newsroom into your AI?〉，2026-11-03，https://fdaudens.substack.com/p/would-you-pay-to-plug-a-newsroom</div>
+  </div>
+</div>
+
+<!-- P22: Five Quotes with Responses -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title">與 Daudens 對話：<span>五句話與我們的回應</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="quote-rows">
+      <div class="quote-row">
+        <div>
+          <div class="qt" style="font-weight:600">"Publishers should treat agents as customers."</div>
+          <div class="qt" style="font-size:14px;margin-top:4px">出版者應該把 AI 代理當成客戶。</div>
+          <div class="qt" style="margin-top:8px;color:var(--accent);font-size:14.5px"><strong>我們的回應</strong>：零點擊之後，讀者還在，只是換了一個入口。與其讓代理免費、不受控地取走內容，不如正式把它當客戶，給它一條可控、可溯源的路。</div>
+        </div>
+      </div>
+      <div class="quote-row">
+        <div>
+          <div class="qt" style="font-weight:600">"These tool definitions are editorial choices too."</div>
+          <div class="qt" style="font-size:14px;margin-top:4px">這些工具的定義，本身也是編輯選擇。</div>
+          <div class="qt" style="margin-top:8px;color:var(--accent);font-size:14.5px"><strong>我們的回應</strong>：我們親身踩過。工具怎麼命名、怎麼描述、回傳什麼，都在決定 AI 看見什麼。對圖資界來說，這跟分類與編目是同一件事。</div>
+        </div>
+      </div>
+      <div class="quote-row">
+        <div>
+          <div class="qt" style="font-weight:600">"A connector isn't a business model."</div>
+          <div class="qt" style="font-size:14px;margin-top:4px">連接器不是商業模式。</div>
+          <div class="qt" style="margin-top:8px;color:var(--accent);font-size:14.5px"><strong>我們的回應</strong>：同意，接上不等於有價值。我的初步答案是，價值不只在新聞的即時性，而在這座庫本身：它是台灣新聞觀點與輿論史的紀錄。</div>
+        </div>
+      </div>
+      <div class="quote-row">
+        <div>
+          <div class="qt" style="font-weight:600">"When is access to a news agency's information useful enough to become a subscription in your AI workflow?"</div>
+          <div class="qt" style="font-size:14px;margin-top:4px">通訊社的資訊要有用到什麼程度，才值得成為你 AI 工作流程裡的一筆訂閱？</div>
+          <div class="qt" style="margin-top:8px;color:var(--accent);font-size:14.5px"><strong>我們的回應</strong>：研究者、內容產製者、需要溯源的場景最對味。這也是今天來圖資年會的原因：研究者和圖書館，可能就是最需要可信、可溯源來源的人。</div>
+        </div>
+      </div>
+      <div class="quote-row">
+        <div>
+          <div class="qt" style="font-weight:600">"I don't think the pitch can stop at 'you can now access our articles in a chatbot.'"</div>
+          <div class="qt" style="font-size:14px;margin-top:4px">我認為說法不能停在「現在你可以在聊天機器人裡讀我們的文章」。</div>
+          <div class="qt" style="margin-top:8px;color:var(--accent);font-size:14.5px"><strong>我們的回應</strong>：所以我們想講的不是「文章搬進 AI」，而是「一座記憶庫能被查找、被引用、被檢驗」。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- P23: Archive Authenticity Question -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title"><span>報禁時代的新聞是真實的嗎？</span></h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">有人會問，報禁時代留下的新聞報導是真實的嗎？</p>
+    <div class="big-q">
+      庫的價值不在於每一則都是「真相」，而在於它<em>完整記錄了當時「誰說了什麼、怎麼報導」</em>；有時間、出處與後續報導可以對照，後人才能檢驗與重新理解。
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-name">呼應三層蛋糕的「claim business」</div>
+        <div class="eco-desc">我們記錄的是陳述（claim），不是保證每一則都是絕對真相；但正因完整留存，後人才能對照與檢驗。</div>
+      </div>
+      <div class="eco-card g">
+        <div class="eco-name">資料邊界說明</div>
+        <div class="eco-desc">文字資料庫從 1990 年起，正在回溯補建中；影像從 1924 年持續歸檔至今，無中斷。報禁時期（1988 年前）的內容在 MCP 中主要是<strong>照片與說明</strong>。</div>
+      </div>
+    </div>
+    <div class="insight">
+      對圖書館來說，這是典藏的核心原則：<strong>不是只保存「正確」的東西，而是完整保存脈絡，讓後人能重新檢視</strong>。例如黨外運動在報禁時期的報導，正因完整留存，後人才能對照理解當時的輿論環境。
+    </div>
+  </div>
+</div>
+
+<!-- P24: Evolution and Preservation -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title"><span>長期演變與留存</span>，讓它成為台灣輿論史的參照</h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">從 1924 年的照片到 1990 年以後的文字稿，再到每天更新的新聞：記錄的不只是新聞，也記錄了台灣媒體自身的改變。</p>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-type">完整性</div>
+        <div class="eco-name">持續歸檔，無中斷</div>
+        <div class="eco-desc">影像從 1924 年持續歸檔至今；文字資料庫從 1990 年起，正在回溯補建中。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">可溯源</div>
+        <div class="eco-name">每則都有出處、時間、署名</div>
+        <div class="eco-desc">附 metadata：攝影記者署名、地點、人物、新聞專題標籤；年鑑是篇 → 章 → 文三層結構。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-type">與 SPIEGEL 呼應</div>
+        <div class="eco-name">開放艱難的歷史紀錄</div>
+        <div class="eco-desc">本身就是一種負責。不是只保存光榮的部分，而是完整保存，讓後人能檢驗。</div>
+      </div>
+    </div>
+    <div class="insight">
+      <strong>這是新聞社與圖書館共同的職責</strong>：不是只保存「正確」的東西，而是完整保存脈絡，讓後人能重新檢視、能對照、能理解。
+    </div>
+  </div>
+</div>
+
+<!-- P25: "Two Systems" Slide (Hypothetical Mood) -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title"><span>假設有一天</span>被「兩制」了，它還可能存在嗎？</h2>
+  </div>
+  <div class="slide-body">
+    <p class="lede">這個威脅一直都存在，雖然我們不預測未來。</p>
+    <div class="big-q">
+      以問句收，不給答案。<em>但延伸問題是：庫要存在，靠的是什麼？</em>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-name">完整性</div>
+        <div class="eco-desc">持續、完整的紀錄，讓它不只是新聞，而是歷史。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">異地保存</div>
+        <div class="eco-desc">多處備份，不讓單一事件摧毀整個庫。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">開放格式</div>
+        <div class="eco-desc">不鎖在特定平台，讓它能被不同系統讀取。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">多個保管者</div>
+        <div class="eco-desc">不只是新聞社自己，而是與圖書館、學術機構一起守護。</div>
+      </div>
+    </div>
+    <div class="insight">
+      圖資連結：<strong>這是圖書館和檔案館最熟悉的課題</strong>——新聞社和圖書館應該一起當這座記憶的保管者。
+    </div>
+  </div>
+</div>
+
+<!-- P26: Uncompleted Work -->
+<div class="slide">
+  <div class="slide-header">
+    <h2 class="section-title"><span>還沒做完的事</span></h2>
+  </div>
+  <div class="slide-body">
+    <div class="eco-grid">
+      <div class="eco-card">
+        <div class="eco-name">1. Claim 層級溯源</div>
+        <div class="eco-desc">把出處、時間、更正跟著單一陳述走（對照 News Atom、三層蛋糕）。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">2. 1990 年前的文字紀錄</div>
+        <div class="eco-desc">評估早期稿件數位化與 OCR、與影像 metadata 串接。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">3. 典藏韌性</div>
+        <div class="eco-desc">多處備份、開放格式，與國家圖書館、學術機構討論共同保存。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">4. 更正與撤稿紀錄</div>
+        <div class="eco-desc">讓 AI 取用時也拿到更正（對照 MH-140 案例）。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">5. 工具路由與 zero hit</div>
+        <div class="eco-desc">法規工具的問題還沒解決；如何減少選錯工具、提升路由精準度。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">6. 計量與授權</div>
+        <div class="eco-desc">TollBit、RSL、SPUR 等標準的導入（RSL 的 llms.txt 已完成）。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">7. 可發現性與聯盟</div>
+        <div class="eco-desc">Daudens 的「Apple News for AI」，多家媒體共用一個入口的可能。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">8. 學會從使用者需求中學習</div>
+        <div class="eco-desc">哪些需求在被滿足、研究者和一次性提問者是否要分開定價。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">9. 評測擴大</div>
+        <div class="eco-desc">更多模型、更多題型，即時新聞測試從 50 題擴大。</div>
+      </div>
+      <div class="eco-card">
+        <div class="eco-name">10. 與圖資界合作</div>
+        <div class="eco-desc">研究者與館員可能是 MCP 最對味的使用者；MCP 與研究者、需要溯源的場景相性較合。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- P27: Demo (S11) -->
 <div class="slide">
   <div class="slide-header">
     <h2 class="section-title">來看看<span>可以找到什麼？</span></h2>
@@ -750,6 +1334,7 @@
         <a href="https://ask.cna.com.tw/ask/"><img src="https://img-hosting.u0401006.workers.dev/i/IoCQVoW.png" alt="CNA MCP 訂閱 QR Code"></a>
       </div>
     </div>
+    <p class="lede" style="margin-top:24px;text-align:center">建議 demo 題目與圖資相關：例如查某個議題的時間軸、用日文或英文查台灣新聞、查影像的 metadata。</p>
   </div>
 </div>
 
