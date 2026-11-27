@@ -668,14 +668,17 @@
   </div>
   <div class="slide-body shots-body">
     <div class="shot-stage">
-      <img src="japanewse00001.png" alt="勇鷹 1/7">
-      <img src="japanewse00002.png" alt="勇鷹 2/7">
-      <img src="japanewse00003.png" alt="勇鷹 3/7">
-      <img src="japanewse00004.png" alt="勇鷹 4/7">
-      <img src="japanewse00005.png" alt="勇鷹 5/7">
-      <img src="japanewse00006.png" alt="勇鷹 6/7">
-      <img src="japanewse00007.png" alt="勇鷹 07/7">
-      <div class="shot-counter">1 / 7　滾動滑鼠切換下一張</div>
+      <img src="https://img-hosting.u0401006.workers.dev/i/MzzSUn9.png" alt="勇鷹 1/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/ZPkU9nk.png" alt="勇鷹 2/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/zkexnkq.png" alt="勇鷹 3/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/R3uRp8n.png" alt="勇鷹 4/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/R09Nw3U.png" alt="勇鷹 5/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/5VrCTcH.png" alt="勇鷹 6/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/B1nBZbu.png" alt="勇鷹 7/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/C0rqsTI.png" alt="勇鷹 8/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/oauyeLW.png" alt="勇鷹 9/10">
+      <img src="https://img-hosting.u0401006.workers.dev/i/Qkkibur.png" alt="勇鷹 10/10">
+      <div class="shot-counter">1 / 10　滾動滑鼠切換下一張</div>
     </div>
   </div>
 </div>
@@ -981,9 +984,7 @@
 </script>
 
 <script>
-(function(){
-  const stage = document.querySelector('.shot-stage');
-  if (!stage) return;
+document.querySelectorAll('.shot-stage').forEach(function(stage){
   const imgs = Array.from(stage.querySelectorAll('img'));
   const counter = stage.querySelector('.shot-counter');
   const body = stage.closest('.slide-body');
@@ -1014,7 +1015,7 @@
     if (locked || Math.abs(e.deltaY) < 8) return;
     if (e.deltaY > 0) goTo(cur + 1, 1); else goTo(cur - 1, -1);
   }, { passive: false });
-})();
+});
 </script>
 
 <script>
